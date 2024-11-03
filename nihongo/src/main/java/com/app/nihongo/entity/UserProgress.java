@@ -1,8 +1,10 @@
 package com.app.nihongo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import lombok.Data;
 
+import java.time.LocalDateTime;
+@Data
 @Entity
 @Table(name = "User_Progress")
 public class UserProgress {
@@ -20,8 +22,6 @@ public class UserProgress {
     private Lesson lesson;
 
     private Integer score;
-    private LocalDateTime completionDate;
-    private Boolean reviewNeeded;
 
-    // Getters and Setters
+
 }
