@@ -6,6 +6,7 @@ import { useBottomBarItems } from "./BottomBar";
 import type { LoginScreenState } from "./LoginScreen";
 import { LoginScreen } from "./LoginScreen";
 import { GlobeIconSvg, PodcastIconSvg } from "./Svgs";
+import { useBoundStore } from "~/hooks/useBoundStore";
 
 const LeftBarMoreMenuSvg = (props: ComponentProps<"svg">) => {
   return (
@@ -26,8 +27,8 @@ const LeftBarMoreMenuSvg = (props: ComponentProps<"svg">) => {
 };
 
 export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
-  const loggedIn = useStore((x) => x.loggedIn);
-  const logOut = useStore((x) => x.logOut);
+  const loggedIn = useBoundStore((x) => x.loggedIn);
+  const logOut = useBoundStore((x) => x.logOut);
 
   const [moreMenuShown, setMoreMenuShown] = useState(false);
   const [loginScreenState, setLoginScreenState] =
