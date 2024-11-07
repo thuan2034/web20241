@@ -20,7 +20,7 @@ export const Quiz = ({
   const [percentage, setPercentage] = useState(initialPercentage);
   return (
     <>
-      <Header hearts={hearts} percentage={percentage} />
+      <Header hearts={hearts} percentage={percentage} testing={false} />
     </>
   );
 };
