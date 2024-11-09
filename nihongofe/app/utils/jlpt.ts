@@ -2,10 +2,10 @@ export type JLPT = (typeof jlpt)[number];
 
 const jlpt = [
   { name: "N1" },
-  { name: "N2" }, // Đã sửa nativeName
-  { name: "N3"}, // Đã sửa nativeName
-  { name: "N4"}, // Đã sửa nativeName
-  { name: "N5"}, // Đã sửa nativeName
+  { name: "N2" }, 
+  { name: "N3"},
+  { name: "N4"}, 
+  { name: "N5"}, 
 ] as const;
 
 export default jlpt;
