@@ -3,6 +3,7 @@ package com.app.nihongo.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
     @Column(name = "user_id")
-    private int userId;
+    private Integer userId;
 
     @Column(name = "username")
     private String username;
@@ -53,5 +54,13 @@ public class User {
     @Lob
     private String avatar;
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_level",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "level_id")
+    )
+    private List<Level> levels = new ArrayList<>();
 
 }
