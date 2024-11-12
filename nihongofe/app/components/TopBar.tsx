@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import type { ComponentProps } from "react";
 import React, { useState } from "react";
-import { useBoundStore } from "~/hooks/useBoundStore";
+import { useBoundStore } from "src/hooks/useBoundStore";
 import { Calendar } from "./Calendar";
 import { Flag } from "./Flag";
 import {

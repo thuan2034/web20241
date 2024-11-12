@@ -13,11 +13,11 @@ import {
   TreasureProgressSvg,
 } from "./Svgs";
 import { Calendar } from "./Calendar";
-import { useBoundStore } from "~/hooks/useBoundStore";
+import { useBoundStore } from "src/hooks/useBoundStore";
 import { Flag } from "./Flag";
 import type { LoginScreenState } from "./LoginScreen";
 import { LoginScreen } from "./LoginScreen";
-import { useLeaderboardRank } from "~/hooks/useLeaderboard";
+import { useLeaderboardRank } from "src/hooks/useLeaderboard";
 
 export const RightBar = () => {
   const loggedIn = useBoundStore((x) => x.loggedIn);
