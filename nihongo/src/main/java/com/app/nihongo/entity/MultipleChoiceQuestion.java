@@ -1,7 +1,11 @@
 package com.app.nihongo.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+import java.util.List;
+
+@Data
 @Entity
 @Table(name = "Multiple_Choice_Questions")
 public class MultipleChoiceQuestion {
@@ -12,16 +16,12 @@ public class MultipleChoiceQuestion {
 
     @Column(columnDefinition = "TEXT")
     private String questionContent;
-    private String correctAnswer;
-    private String option1;
-    private String option2;
-    private String option3;
-    private String option4;
 
     @ManyToOne
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
 
-    // Getters and Setters
-}
+    @OneToMany(mappedBy = "multipleChoiceQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MultipleChoiceQuestionOption> options;
 
+}
