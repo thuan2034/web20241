@@ -12,6 +12,8 @@ public class LessonMapper {
         lessonDTO.setId(lesson.getLessonId());
         lessonDTO.setDisplayOrder(lesson.getDisplayOrder());
         lessonDTO.setName(lesson.getLessonTitle());
+        lessonDTO.setType(lesson.getType());
+        lessonDTO.setStatus(lesson.getStatus());
         return lessonDTO;
     }
 }

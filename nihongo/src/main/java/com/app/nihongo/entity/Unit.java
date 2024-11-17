@@ -15,6 +15,7 @@ public class Unit {
 
     private Integer displayOrder;
     private String name;
+    private String description;
     private String level;
 
 }

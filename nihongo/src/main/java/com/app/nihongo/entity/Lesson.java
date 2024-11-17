@@ -13,7 +13,8 @@ public class Lesson {
     private Integer lessonId;
     private String lessonTitle;
     private Integer displayOrder;
-
+    private String status;
+    private String type;
 
     @ManyToOne
     @JoinColumn(name = "unit_id")

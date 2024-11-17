@@ -7,5 +7,7 @@ public class LessonDTO {
     private Integer id;
     private Integer displayOrder;
     private String name;
+    private String type;
+    private String status;
 
 }
