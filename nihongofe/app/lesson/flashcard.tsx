@@ -72,8 +72,8 @@ const FlashcardSet = () => {
       );
       setCards(updatedCards);
     } else {
-      setEditedWord(cards[currentIndex].word);
-      setEditedMeaning(cards[currentIndex].meaning);
+      setEditedWord(cards[currentIndex]?.word || "");
+      setEditedMeaning(cards[currentIndex]?.meaning || "");
     }
     setIsEditing(!isEditing);
   };
@@ -139,7 +139,7 @@ const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
                   />
                 ) : (
                   <h2 className="text-4xl font-bold text-gray-800">
-                    {cards[currentIndex].word}
+                    {cards[currentIndex]?.word}
                   </h2>
                 )}
               </div>
@@ -152,7 +152,7 @@ const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
                   />
                 ) : (
                   <p className="text-2xl text-gray-600">
-                    {cards[currentIndex].meaning}
+                    {cards[currentIndex]?.meaning}
                   </p>
                 )}
               </div>
