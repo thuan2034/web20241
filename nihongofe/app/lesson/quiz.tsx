@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Header } from "./header";
 import { QuestionBubble } from "./question-bubble";
 import { Challenge } from "./challenge";
+import FlashcardSet from "./flashcard";
+import MatchingPairsExercise from "./pairmatching";
 import { Footer } from "./footer";
 import { ResultCard } from "./result-card";
 type Props = {
@@ -119,7 +121,7 @@ export const Quiz = ({
       : challenge.question;
   return (
     <>
-      <Header hearts={hearts} percentage={percentage} testing={false} />
+      {/* <Header hearts={hearts} percentage={percentage} testing={false} />
       <div className="flex-1">
         <div className="h-full flex items-center justify-center">
           <div className="lg:min-h-[350px] lg:w-[600px] w-full px-6 lg:px-0 flex flex-col gap-y-12">
@@ -142,7 +144,10 @@ export const Quiz = ({
           </div>
         </div>
       </div>
-      <Footer disabled={!selectedOption} status={status} onCheck={onContinue} />
+      <Footer disabled={!selectedOption} status={status} onCheck={onContinue} /> */}
+      <MatchingPairsExercise />
+        <FlashcardSet />
+
     </>
   );
 };
