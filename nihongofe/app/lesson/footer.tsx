@@ -1,15 +1,25 @@
-import { useKey, useMedia } from "react-use";
 import { CheckCircle, XCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useKey, useMedia } from "react-use";
+
 import { Button } from "@/components/ui/button";
-type Props = {
+import { cn } from "@/lib/utils";
+
+type FooterProps = {
   onCheck: () => void;
   status: "correct" | "wrong" | "none" | "completed";
-  disabled: boolean;
-  id: boolean;
+  disabled?: boolean;
+  lessonId?: number;
 };
-export const Footer = ({ onCheck, status, disabled, id }: Props) => {
+
+export const Footer = ({
+  onCheck,
+  status,
+  disabled,
+  lessonId,
+}: FooterProps) => {
   useKey("Enter", onCheck, {}, [onCheck]);
+  const isMobile = useMedia("(max-width: 1024px)");
+
   return (
     <footer
       className={cn(
@@ -36,8 +46,8 @@ export const Footer = ({ onCheck, status, disabled, id }: Props) => {
         {status === "completed" && (
           <Button
             variant="default"
-            size="lg"
-            onClick={() => (window.location.href = `/lesson/${id}`)}
+            size={isMobile ? "sm" : "lg"}
+            onClick={() => (window.location.href = `/lesson/${lessonId}`)}
           >
             Practice again
           </Button>
@@ -48,7 +58,7 @@ export const Footer = ({ onCheck, status, disabled, id }: Props) => {
           aria-disabled={disabled}
           className="ml-auto"
           onClick={onCheck}
-          size="lg"
+          size={isMobile ? "sm" : "lg"}
           variant={status === "wrong" ? "danger" : "secondary"}
         >
           {status === "none" && "Check"}
