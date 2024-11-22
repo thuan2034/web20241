@@ -1,20 +1,21 @@
-import { lessons, units } from "@/db/schema";
-
 import { LessonButton } from "./lesson-button";
 import { UnitBanner } from "./unit-banner";
 
 type UnitProps = {
   id: number;
-  order: number;
   title: string;
   description: string;
-  lessons: (typeof lessons & {
+  lessons: {
+    id: number;
     completed: boolean;
-  })[];
+  }[];
   activeLesson:
-    | (typeof lessons & {
-        unit: typeof units;
-      })
+    | {
+        id: number;
+        unit: {
+          id: number;
+        };
+      }
     | undefined;
   activeLessonPercentage: number;
 };
@@ -31,14 +32,14 @@ export const Unit = ({
       <UnitBanner title={title} description={description} />
 
       <div className="relative flex flex-col items-center">
-        {lessons.map((lesson, i) => {
+        {lessons?.map((lesson, i) => {
           const isCurrent = lesson.id === activeLesson?.id;
           const isLocked = !lesson.completed && !isCurrent;
 
           return (
             <LessonButton
               key={lesson.id}
-              id={Number(lesson.id)}
+              id={Number(lesson.id)} 
               index={i}
               totalCount={lessons.length - 1}
               current={isCurrent}

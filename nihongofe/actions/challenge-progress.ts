@@ -1,17 +1,12 @@
 "use server";
 
 import axios from "axios";
-// import { currentUser } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { getUserProgress } from "@/db/queries";
 
 export const upsertUserProgress = async (courseId: number) => {
-  // const user = await currentUser();
-
-  // if (!user) throw new Error("Unauthorized.");
-
   const courseResponse = await axios.get(`/api/courses/${courseId}`);
   const course = courseResponse.data;
 
@@ -25,8 +20,8 @@ export const upsertUserProgress = async (courseId: number) => {
   if (existingUserProgress) {
     await axios.put(`/api/user-progress/${existingUserProgress.userId}`, {
       activeCourseId: courseId,
-      userName: "User", // user.firstName || "User",
-      userImageSrc: "/mascot.svg", // user.imageUrl || "/mascot.svg",
+      userName: "User",
+      userImageSrc: "/mascot.svg",
     });
 
     revalidatePath("/courses");
@@ -35,10 +30,10 @@ export const upsertUserProgress = async (courseId: number) => {
   }
 
   await axios.post(`/api/user-progress`, {
-    userId: "user-id", // user.id,
+    userId: "user-id",
     activeCourseId: courseId,
-    userName: "User", // user.firstName || "User",
-    userImageSrc: "/mascot.svg", // user.imageUrl || "/mascot.svg",
+    userName: "User",
+    userImageSrc: "/mascot.svg",
   });
 
   revalidatePath("/courses");

@@ -3,22 +3,21 @@ import { useCallback } from "react";
 import Image from "next/image";
 import { useAudio, useKey } from "react-use";
 
-import { challenges } from "@/db/schema";
 import { cn } from "@/lib/utils";
+
 
 type CardProps = {
   id: number;
   text: string;
-  imageSrc: string | null;
-  audioSrc: string | null;
+  imageSrc: string | null | undefined;
+  audioSrc: string | null | undefined;
   shortcut: string;
   selected?: boolean;
   onClick: () => void;
   status?: "correct" | "wrong" | "none";
   disabled?: boolean;
   type: string;
-};
-
+}
 export const Card = ({
   text,
   imageSrc,

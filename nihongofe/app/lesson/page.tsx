@@ -5,7 +5,7 @@ import { getLesson, getUserProgress} from "@/db/queries";
 import { Quiz } from "./quiz";
 
 const LessonPage = async () => {
-  const lessonData = getLesson() as Promise<{ id: string; unitId: string; order: number; status: string; type: string; xpReward: number; challenges: { id: string; challengeId: string; text: string; correct: string; question?: string; imageSrc: string; audioSrc: string; challengeOptions: { id: number; text: string; correct: boolean; }[]; completed: boolean; type: string; }[] }>;
+  const lessonData = getLesson() as Promise<{ id: number; unitId: number; order: number; status: string; type: string; xpReward: number; challenges: { id: number; challengeId: number; text: string; correct: string; question?: string; imageSrc: string; audioSrc: string; challengeOptions: { id: number; text: string; correct: boolean; }[]; completed: boolean; type: string; }[] }>;
   const userProgressData = getUserProgress();
 
   const [lesson, userProgress] = await Promise.all([

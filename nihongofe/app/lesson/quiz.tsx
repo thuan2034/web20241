@@ -9,7 +9,6 @@ import Confetti from "react-confetti";
 import { useAudio, useWindowSize } from "react-use";
 import { toast } from "sonner";
 
-import { challengeOptions, challenges } from "@/db/schema";
 import { usePracticeModal } from "@/store/use-practice-modal";
 
 import { Challenge } from "./challenge";
@@ -64,7 +63,7 @@ export const Quiz = ({
   const [percentage, setPercentage] = useState(() => {
     return initialPercentage === 100 ? 0 : initialPercentage;
   });
-  const [challenges] = useState(initialLessonChallenges);
+  const [challenges, setChallenges] = useState(initialLessonChallenges);
   const [activeIndex, setActiveIndex] = useState(() => {
     const uncompletedIndex = challenges.findIndex(
       (challenge) => !challenge.completed
@@ -116,6 +115,11 @@ export const Quiz = ({
             void correctControls.play();
             setStatus("correct");
             setPercentage((prev) => prev + 100 / challenges.length);
+            setChallenges((prevChallenges) =>
+              prevChallenges.map((ch) =>
+                ch.id === challenge.id ? { ...ch, completed: true } : ch
+              )
+            );
           })
           .catch(() => toast.error("Something went wrong. Please try again."));
       });
@@ -189,8 +193,6 @@ export const Quiz = ({
       {correctAudio}
       <Header
         percentage={percentage}
-        hearts={3} // Replace with the actual value
-        hasActiveSubscription={true} // Replace with the actual value
       />
 
       <div className="flex-1">

@@ -1,17 +1,14 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { InfinityIcon } from "lucide-react";
 type Props = {
   activeCourse: { title: string; imageSrc: string };
-  hearts: number;
   points: number;
   testing: boolean;
 };
 export const UserProgress = ({
   activeCourse,
   points,
-  hearts,
   testing,
 }: Props) => {
   return (
@@ -37,18 +34,6 @@ export const UserProgress = ({
             height={28}
           />
           {points}
-        </Button>
-      </Link>
-      <Link href="/learn">
-        <Button variant="ghost" className="text-rose-500">
-          <Image
-            src="https://d35aaqx5ub95lt.cloudfront.net/images/hearts/8fdba477c56a8eeb23f0f7e67fdec6d9.svg"
-            alt="Hearts"
-            className="mr-2"
-            width={22}
-            height={22}
-          />
-          {testing ? hearts : <InfinityIcon className="h-4 w-4 stroke-[3]" />}
         </Button>
       </Link>
     </div>
