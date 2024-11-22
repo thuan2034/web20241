@@ -16,7 +16,7 @@ type CardProps = {
   onClick: () => void;
   status?: "correct" | "wrong" | "none";
   disabled?: boolean;
-  type: (typeof challenges.$inferSelect)["type"];
+  type: string;
 };
 
 export const Card = ({

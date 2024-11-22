@@ -8,12 +8,12 @@ type UnitProps = {
   order: number;
   title: string;
   description: string;
-  lessons: (typeof lessons.$inferSelect & {
+  lessons: (typeof lessons & {
     completed: boolean;
   })[];
   activeLesson:
-    | (typeof lessons.$inferSelect & {
-        unit: typeof units.$inferSelect;
+    | (typeof lessons & {
+        unit: typeof units;
       })
     | undefined;
   activeLessonPercentage: number;
@@ -38,7 +38,7 @@ export const Unit = ({
           return (
             <LessonButton
               key={lesson.id}
-              id={lesson.id}
+              id={Number(lesson.id)}
               index={i}
               totalCount={lessons.length - 1}
               current={isCurrent}

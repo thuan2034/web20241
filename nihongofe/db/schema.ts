@@ -1,156 +1,145 @@
-import { relations } from "drizzle-orm";
-import {
-  boolean,
-  integer,
-  pgEnum,
-  pgTable,
-  serial,
-  text,
-  timestamp,
-} from "drizzle-orm/pg-core";
+export const courses = {
+  id: 1, // Changed to number
+  title: "title",
+  imageSrc: "image_src",
+};
 
-import { MAX_HEARTS } from "@/constants";
+export const coursesRelations = {
+  userProgress: "userProgress",
+  units: "units",
+};
 
-export const courses = pgTable("courses", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  imageSrc: text("image_src").notNull(),
-});
+export const lessonsEnum = ["current", "completed", "locked"];
 
-export const coursesRelations = relations(courses, ({ many }) => ({
-  userProgress: many(userProgress),
-  units: many(units),
-}));
+export const units = {
+  id: 1, // Changed to number
+  title: "title",
+  description: "description",
+  courseId: 1, // Changed to number
+  order: 1,
+};
 
-export const units = pgTable("units", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(), // Unit 1
-  description: text("description").notNull(), // Learn the basics of spanish
-  courseId: integer("course_id")
-    .references(() => courses.id, {
-      onDelete: "cascade",
-    })
-    .notNull(),
-  order: integer("order").notNull(),
-});
+export const unitsRelations = {
+  course: "course",
+  lessons: "lessons",
+};
 
-export const unitsRelations = relations(units, ({ many, one }) => ({
-  course: one(courses, {
-    fields: [units.courseId],
-    references: [courses.id],
-  }),
-  lessons: many(lessons),
-}));
+export const lessons = {
+  id: 1, // Changed to number
+  unitId: 1, // Changed to number
+  order: 1,
+  status: "status",
+  type: "type", // "flashcard", "challenge", "final_test"
+  xpReward: 0,
+};
 
-export const lessons = pgTable("lessons", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  unitId: integer("unit_id")
-    .references(() => units.id, {
-      onDelete: "cascade",
-    })
-    .notNull(),
-  order: integer("order").notNull(),
-});
+export const lessonsRelations = {
+  unit: "unit",
+  challenges: "challenges",
+};
 
-export const lessonsRelations = relations(lessons, ({ one, many }) => ({
-  unit: one(units, {
-    fields: [lessons.unitId],
-    references: [units.id],
-  }),
-  challenges: many(challenges),
-}));
+export const challengesEnum = ["SELECT", "ASSIST"];
 
-export const challengesEnum = pgEnum("type", ["SELECT", "ASSIST"]);
+export const challenges = {
+  id: 1, // Changed to number
+  lessonId: 1, // Changed to number
+  type: "type",
+  question: "question",
+  order: 1,
+};
 
-export const challenges = pgTable("challenges", {
-  id: serial("id").primaryKey(),
-  lessonId: integer("lesson_id")
-    .references(() => lessons.id, {
-      onDelete: "cascade",
-    })
-    .notNull(),
-  type: challengesEnum("type").notNull(),
-  question: text("question").notNull(),
-  order: integer("order").notNull(),
-});
+export const challengesRelations = {
+  lesson: "lesson",
+  challengeOptions: "challengeOptions",
+  challengeProgress: "challengeProgress",
+};
 
-export const challengesRelations = relations(challenges, ({ one, many }) => ({
-  lesson: one(lessons, {
-    fields: [challenges.lessonId],
-    references: [lessons.id],
-  }),
-  challengeOptions: many(challengeOptions),
-  challengeProgress: many(challengeProgress),
-}));
+export const challengeOptions = {
+  id: 1, // Changed to number
+  challengeId: 1, // Changed to number
+  text: "text",
+  correct: true,
+  imageSrc: "image_src",
+  audioSrc: "audio_src",
+};
 
-export const challengeOptions = pgTable("challenge_options", {
-  id: serial("id").primaryKey(),
-  challengeId: integer("challenge_id")
-    .references(() => challenges.id, {
-      onDelete: "cascade",
-    })
-    .notNull(),
-  text: text("text").notNull(),
-  correct: boolean("correct").notNull(),
-  imageSrc: text("image_src"),
-  audioSrc: text("audio_src"),
-});
+export const challengeOptionsRelations = {
+  challenge: "challenge",
+};
 
-export const challengeOptionsRelations = relations(
-  challengeOptions,
-  ({ one }) => ({
-    challenge: one(challenges, {
-      fields: [challengeOptions.challengeId],
-      references: [challenges.id],
-    }),
-  })
-);
+export const challengeProgress = {
+  id: 1, // Changed to number
+  userId: 1, // Changed to number
+  challengeId: 1, // Changed to number
+  completed: false,
+};
 
-export const challengeProgress = pgTable("challenge_progress", {
-  id: serial("id").primaryKey(),
-  userId: text("user_id").notNull(),
-  challengeId: integer("challenge_id")
-    .references(() => challenges.id, {
-      onDelete: "cascade",
-    })
-    .notNull(),
-  completed: boolean("completed").notNull().default(false),
-});
+export const challengeProgressRelations = {
+  challenge: "challenge",
+};
 
-export const challengeProgressRelations = relations(
-  challengeProgress,
-  ({ one }) => ({
-    challenge: one(challenges, {
-      fields: [challengeProgress.challengeId],
-      references: [challenges.id],
-    }),
-  })
-);
+export const userProgress = {
+  userId: 1, // Changed to number
+  userName: "user_name",
+  userImageSrc: "/mascot.svg",
+  activeCourseId: 1, // Changed to number
+  hearts: 5,
+  points: 0,
+};
 
-export const userProgress = pgTable("user_progress", {
-  userId: text("user_id").primaryKey(),
-  userName: text("user_name").notNull().default("User"),
-  userImageSrc: text("user_image_src").notNull().default("/mascot.svg"),
-  activeCourseId: integer("active_course_id").references(() => courses.id, {
-    onDelete: "cascade",
-  }),
-  hearts: integer("hearts").notNull().default(MAX_HEARTS),
-  points: integer("points").notNull().default(0),
-});
+export const userProgressRelations = {
+  activeCourse: "activeCourse",
+};
 
-export const userProgressRelations = relations(userProgress, ({ one }) => ({
-  activeCourse: one(courses, {
-    fields: [userProgress.activeCourseId],
-    references: [courses.id],
-  }),
-}));
+export const userSubscription = {
+  id: 1, // Changed to number
+  userId: 1, // Changed to number
+  stripeCustomerId: "stripe_customer_id",
+  stripeSubscriptionId: "stripe_subscription_id",
+  stripePriceId: "stripe_price_id",
+  stripeCurrentPeriodEnd: "stripe_current_period_end",
+};
 
-export const userSubscription = pgTable("user_subscription", {
-  id: serial("id").primaryKey(),
-  userId: text("user_id").notNull().unique(),
-  stripeCustomerId: text("stripe_customer_id").notNull().unique(),
-  stripeSubscriptionId: text("stripe_subscription_id").notNull().unique(),
-  stripePriceId: text("stripe_price_id").notNull(),
-  stripeCurrentPeriodEnd: timestamp("stripe_current_period_end").notNull(),
-});
+export const fakeUnits = [
+  {
+    id: 1, // Changed to number
+    title: "Unit 1",
+    description: "Description for Unit 1",
+    courseId: 1, // Changed to number
+    order: 1,
+  },
+  {
+    id: 2, // Changed to number
+    title: "Unit 2",
+    description: "Description for Unit 2",
+    courseId: 1, // Changed to number
+    order: 2,
+  },
+];
+
+export const fakeLessons = [
+  {
+    id: 1, // Changed to number
+    unitId: 1, // Changed to number
+    order: 1,
+    status: "current",
+    type: "flashcard",
+    xpReward: 100,
+  },
+  {
+    id: 2, // Changed to number
+    unitId: 1, // Changed to number
+    order: 2,
+    status: "locked",
+    type: "challenge",
+    xpReward: 0,
+  },
+  {
+    id: 3, // Changed to number
+    unitId: 1, // Changed to number
+    order: 3,
+    status: "locked",
+    type: "final_test",
+    xpReward: 0,
+  },
+];
