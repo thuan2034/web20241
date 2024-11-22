@@ -4,7 +4,7 @@ import axios from "axios";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { getUserProgress } from "@/db/queries";
+import { getCurrentLesson, getLessonById } from "@/db/queries";
 
 export const upsertUserProgress = async (courseId: number) => {
   const courseResponse = await axios.get(`/api/courses/${courseId}`);
@@ -15,7 +15,7 @@ export const upsertUserProgress = async (courseId: number) => {
   if (!course.units.length || !course.units[0].lessons.length)
     throw new Error("Course is empty.");
 
-  const existingUserProgress = await getUserProgress();
+  const existingUserProgress = await getCurrentLesson();
 
   if (existingUserProgress) {
     await axios.put(`/api/user-progress/${existingUserProgress.userId}`, {
@@ -42,7 +42,7 @@ export const upsertUserProgress = async (courseId: number) => {
 };
 
 export const reduceHearts = async (challengeId: number) => {
-  const currentUserProgress = await getUserProgress();
+  const currentUserProgress = await getCurrentLesson();
 
   if (!currentUserProgress) throw new Error("User progress not found.");
 
@@ -52,6 +52,7 @@ export const reduceHearts = async (challengeId: number) => {
   if (!challenge) throw new Error("Challenge not found.");
 
   const lessonId = challenge.lessonId;
+  const lessonDetails = await getLessonById(lessonId);
 
   const existingChallengeProgressResponse = await axios.get(
     `/api/challenge-progress?userId=${currentUserProgress.userId}&challengeId=${challengeId}`
@@ -74,7 +75,7 @@ export const reduceHearts = async (challengeId: number) => {
 };
 
 export const refillHearts = async () => {
-  const currentUserProgress = await getUserProgress();
+  const currentUserProgress = await getCurrentLesson();
 
   if (!currentUserProgress) throw new Error("User progress not found.");
   if (currentUserProgress.points < 10)

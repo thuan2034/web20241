@@ -3,19 +3,25 @@
 import axios from "axios";
 import { revalidatePath } from "next/cache";
 
-import { getUserProgress } from "@/db/queries";
+import { getCurrentLesson, getLessonById, getUnits } from "@/db/queries";
+import exp from "constants";
 
 export const upsertChallengeProgress = async (challengeId: number) => {
-  const currentUserProgress = await getUserProgress();
+  const currentUserProgress = await getCurrentLesson();
 
   if (!currentUserProgress) throw new Error("User progress not found.");
 
-  const challengeResponse = await axios.get(`/api/challenges/${challengeId}`);
-  const challenge = challengeResponse.data;
+  const units = await getUnits();
+  const lessons = units.flatMap((unit: { lessons: any[] }) => unit.lessons);
+  const challengeLesson = lessons.find((lesson: { challenges: any[] }) =>
+    lesson.challenges.some((challenge: { id: number }) => challenge.id === challengeId)
+  );
 
-  if (!challenge) throw new Error("Challenge not found.");
+  if (!challengeLesson) throw new Error("Challenge not found.");
 
-  const lessonId = challenge.lessonId;
+  const lessonId = challengeLesson.id;
+  const lessonDetails = await getLessonById(lessonId);
+  const challenge = lessonDetails.challenges.find((challenge: { id: number }) => challenge.id === challengeId);
 
   const existingChallengeProgressResponse = await axios.get(
     `/api/challenge-progress?userId=${currentUserProgress.userId}&challengeId=${challengeId}`
@@ -30,7 +36,7 @@ export const upsertChallengeProgress = async (challengeId: number) => {
     });
 
     await axios.put(`/api/user-progress/${currentUserProgress.userId}`, {
-      points: currentUserProgress.points + 10,
+      points: currentUserProgress.points,
     });
 
     revalidatePath("/learn");
@@ -48,7 +54,7 @@ export const upsertChallengeProgress = async (challengeId: number) => {
   });
 
   await axios.put(`/api/user-progress/${currentUserProgress.userId}`, {
-    points: currentUserProgress.points + 10,
+    points: currentUserProgress.points + exp,
   });
 
   revalidatePath("/learn");
