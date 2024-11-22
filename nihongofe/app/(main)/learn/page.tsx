@@ -1,180 +1,62 @@
-import { StickyWrapper } from "@/components/stickywrapper";
-import { FeedWrapper } from "@/components/feedwrapper";
+import { redirect } from "next/navigation";
+
+import { FeedWrapper } from "@/components/feed-wrapper";
+import { Promo } from "@/components/promo";
+import { Quests } from "@/components/quests";
+import { StickyWrapper } from "@/components/sticky-wrapper";
+import { UserProgress } from "@/components/user-progress";
+import {
+  getCourseProgress,
+  getLessonPercentage,
+  getUnits,
+  getUserProgress,
+  getUserSubscription,
+} from "@/db/queries";
+
 import { Header } from "./header";
-import { UserProgress } from "@/components/userprogress";
 import { Unit } from "./unit";
 
-// Mock function to return fake data
-const getUnits = async () => {
-  return [
-    {
-      id: 1,
-      order: 1,
-      title: "Unit 1",
-      description: "Description for Unit 1",
-      lessons: [
-        {
-          id: 1,
-          title: "Lesson 1",
-          order: 1,
-          questions: [
-            { id: 1, text: "Question 1" },
-            { id: 2, text: "Question 2" },
-          ],
-          completed: false,
-        },
-        {
-          id: 2,
-          title: "Lesson 2",
-          order: 2,
-          questions: [
-            { id: 3, text: "Question 3" },
-            { id: 4, text: "Question 4" },
-          ],
-          completed: false,
-        },
-        {
-          id: 3,
-          title: "Lesson 1",
-          order: 3,
-          questions: [
-            { id: 1, text: "Question 1" },
-            { id: 2, text: "Question 2" },
-          ],
-          completed: false,
-        },
-        {
-          id: 4,
-          title: "Lesson 1",
-          order: 4,
-          questions: [
-            { id: 1, text: "Question 1" },
-            { id: 2, text: "Question 2" },
-          ],
-          completed: false,
-        },
-        {
-          id: 4,
-          title: "Lesson 1",
-          order: 4,
-          questions: [
-            { id: 1, text: "Question 1" },
-            { id: 2, text: "Question 2" },
-          ],
-          completed: false,
-        },
-      ],
-      activeLesson: {
-        id: 1,
-        title: "Lesson 1",
-        order: 1,
-        questions: [
-          { id: 1, text: "Question 1" },
-          { id: 2, text: "Question 2" },
-        ],
-        completed: false,
-        unit: {
-          id: 1,
-          order: 1,
-          title: "Unit 1",
-          description: "Description for Unit 1",
-        },
-      },
-      activeLessonPercentage: 0,
-    },
-    {
-      id: 2,
-      order: 2,
-      title: "Unit 2",
-      description: "Description for Unit 2",
-      lessons: [
-        {
-          id: 3,
-          title: "Lesson 3",
-          order: 1,
-          questions: [
-            { id: 5, text: "Question 5" },
-            { id: 6, text: "Question 6" },
-          ],
-          completed: false,
-        },
-        {
-          id: 4,
-          title: "Lesson 4",
-          order: 2,
-          questions: [
-            { id: 7, text: "Question 7" },
-            { id: 8, text: "Question 8" },
-          ],
-          completed: false,
-        },
-      ],
-      activeLesson: {
-        id: 3,
-        title: "Lesson 3",
-        order: 1,
-        questions: [
-          { id: 5, text: "Question 5" },
-          { id: 6, text: "Question 6" },
-        ],
-        completed: false,
-        unit: {
-          id: 2,
-          order: 2,
-          title: "Unit 2",
-          description: "Description for Unit 2",
-        },
-      },
-      activeLessonPercentage: 0,
-    },
-  ];
-};
-
-export type Props = {
-  id: number;
-  order: number;
-  title: string;
-  description: string;
-  lessons: {
-    id: number;
-    title: string;
-    order: number;
-    questions: { id: number; text: string }[];
-    completed: boolean;
-  }[];
-  activeLesson:
-    | {
-        id: number;
-        title: string;
-        order: number;
-        questions: { id: number; text: string }[];
-        completed: boolean;
-        unit: {
-          id: number;
-          order: number;
-          title: string;
-          description: string;
-        };
-      }
-    | undefined;
-  activeLessonPercentage: number;
-};
-
 const LearnPage = async () => {
-  const units = await getUnits();
+  const userProgressData = getUserProgress();
+  const courseProgressData = getCourseProgress();
+  const lessonPercentageData = getLessonPercentage();
+  const unitsData = getUnits();
+  const userSubscriptionData = getUserSubscription();
+
+  const [
+    userProgress,
+    units,
+    courseProgress,
+    lessonPercentage,
+    userSubscription,
+  ] = await Promise.all([
+    userProgressData,
+    unitsData,
+    courseProgressData,
+    lessonPercentageData,
+    userSubscriptionData,
+  ]);
+
+  if (!courseProgress || !userProgress || !userProgress.activeCourse)
+    redirect("/courses");
+
+  const isPro = !!userSubscription?.isActive;
 
   return (
     <div className="flex flex-row-reverse gap-[48px] px-6">
       <StickyWrapper>
         <UserProgress
-          activeCourse={{ title: "Japanese", imageSrc: "/jp.svg" }}
-          hearts={5}
-          points={0}
-          testing={false}
+          activeCourse={userProgress.activeCourse}
+          hearts={userProgress.hearts}
+          points={userProgress.points}
+          hasActiveSubscription={isPro}
         />
+
+        {!isPro && <Promo />}
+        <Quests points={userProgress.points} />
       </StickyWrapper>
       <FeedWrapper>
-        <Header title="Japanese" />
+        <Header title={userProgress.activeCourse.title} />
         {units.map((unit) => (
           <div key={unit.id} className="mb-10">
             <Unit
@@ -183,8 +65,8 @@ const LearnPage = async () => {
               description={unit.description}
               title={unit.title}
               lessons={unit.lessons}
-              activeLesson={unit.activeLesson}
-              activeLessonPercentage={0}
+              activeLesson={courseProgress.activeLesson}
+              activeLessonPercentage={lessonPercentage}
             />
           </div>
         ))}

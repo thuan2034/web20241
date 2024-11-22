@@ -9,6 +9,7 @@ import FlashcardSet from "./flashcard";
 import MatchingPairsExercise from "./pairmatching";
 import { Footer } from "./footer";
 import { ResultCard } from "./result-card";
+import { cn } from "@/lib/utils";
 type Props = {
   initialPercentage: number;
   initialLessonId: number;
@@ -144,10 +145,11 @@ export const Quiz = ({
           </div>
         </div>
       </div>
-      <Footer disabled={!selectedOption} status={status} onCheck={onContinue} /> */}
-      <MatchingPairsExercise />
-        <FlashcardSet />
-
+      <Footer disabled={!selectedOption} status={status} onCheck={onContinue} /> 
+        <FlashcardSet /> */}
+        <div className={cn("flex-1", "flex", "items-center", "justify-center")}>
+        <MatchingPairsExercise />
+        </div>
     </>
   );
 };
