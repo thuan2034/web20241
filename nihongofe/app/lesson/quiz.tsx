@@ -23,8 +23,8 @@ type QuizProps = {
   initialPercentage: number;
   initialLessonId: number;
   initialLessonChallenges: ({
-    id: number; // Changed to number
-    challengeId: number; // Changed to number
+    id: number;
+    challengeId: number;
     text: string;
     correct: string;
     question?: string;

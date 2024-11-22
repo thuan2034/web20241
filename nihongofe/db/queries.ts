@@ -53,3 +53,12 @@ export const isLessonCompleted = cache(async (lessonId:number) => {
 
   return lesson?.status === "completed" || false; 
 });
+
+export const getLesson = cache(async (lessonId: number) => {
+  const response = await axios.get(`${API_BASE_URL}/lessons/${lessonId}`);
+  return response.data;
+});
+export const getUserProgress = cache(async () => {
+  const response = await axios.get(`${API_BASE_URL}/user-progress`);
+  return response.data;
+});

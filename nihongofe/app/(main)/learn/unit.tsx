@@ -3,11 +3,13 @@ import { UnitBanner } from "./unit-banner";
 
 type UnitProps = {
   id: number;
+  order: number;
   title: string;
   description: string;
   lessons: {
     id: number;
-    completed: boolean;
+    order: number;
+    status: string; // current, completed, locked
   }[];
   activeLesson:
     | {
@@ -33,8 +35,8 @@ export const Unit = ({
 
       <div className="relative flex flex-col items-center">
         {lessons?.map((lesson, i) => {
-          const isCurrent = lesson.id === activeLesson?.id;
-          const isLocked = !lesson.completed && !isCurrent;
+          const isCurrent = lesson.status === "current";
+          const isLocked = lesson.status === "locked";
 
           return (
             <LessonButton

@@ -41,7 +41,7 @@ export const upsertUserProgress = async (courseId: number) => {
   redirect("/learn");
 };
 
-export const reduceHearts = async (challengeId: number) => {
+export const reduceHearts = async (challengeId: number, challengeOptions: number) => {
   const currentUserProgress = await getCurrentLesson();
 
   if (!currentUserProgress) throw new Error("User progress not found.");
