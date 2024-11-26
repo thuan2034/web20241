@@ -1,10 +1,7 @@
-// pages/characters/page.tsx
-
 import React from 'react';
 import CharactersPage from './charactersPage'; // Adjust the path to your CharactersPage component
 import { StickyWrapper } from "@/components/stickywrapper";
 import { FeedWrapper } from "@/components/feedwrapper";
-// import { Header } from "./header";
 import { UserProgress } from "@/components/userprogress";
 const Characters: React.FC = () => {
   return (
