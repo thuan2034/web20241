@@ -48,7 +48,7 @@ export const Footer = ({
         {status === "wrong" && (
           <div className="flex items-center text-base font-bold text-rose-500 lg:text-2xl">
             <XCircle className="mr-4 h-6 w-6 lg:h-10 lg:w-10" />
-            Try again.
+            Wrong answer!
           </div>
         )}
 

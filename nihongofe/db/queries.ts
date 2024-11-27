@@ -23,7 +23,7 @@ const units = [
       {
         id: 3,
         order: 3,
-        status: "blocked",
+        status: "locked",
       },
     ],
   },
