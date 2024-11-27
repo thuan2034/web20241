@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { LessonButton } from "./lesson-button";
 import { UnitBanner } from "./unit-banner";
 
@@ -31,7 +32,11 @@ export const Unit = ({
 }: UnitProps) => {
   return (
     <>
-      <UnitBanner title={title} description={description} />
+      <UnitBanner
+        title={title}
+        description={description}
+        activeLessonId={activeLesson?.id ?? null}
+      />
 
       <div className="relative flex flex-col items-center">
         {lessons?.map((lesson, i) => {
@@ -41,7 +46,7 @@ export const Unit = ({
           return (
             <LessonButton
               key={lesson.id}
-              id={Number(lesson.id)} 
+              id={Number(lesson.id)}
               index={i}
               totalCount={lessons.length - 1}
               current={isCurrent}

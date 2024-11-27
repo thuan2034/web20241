@@ -4,7 +4,8 @@ import { Card } from "./card";
 
 type ChallengeOption = {
   id: number;
-  text: string;
+  option: string;
+  isCorrect: boolean;
   imageSrc?: string | null;
   audioSrc?: string | null;
 };
@@ -39,7 +40,7 @@ export const Challenge = ({
         <Card
           key={option.id}
           id={Number(option.id)} // Ensure id is a number
-          text={option.text}
+          text={option.option}
           imageSrc={option.imageSrc}
           shortcut={`${i + 1}`}
           selected={selectedOption === option.id}

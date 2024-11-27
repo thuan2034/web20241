@@ -3,12 +3,18 @@ import { useKey, useMedia } from "react-use";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { redirect, useRouter } from "next/navigation";
+import { updateStatusLesson } from "@/db/queries";
+import { SessionKey, SessionStorage } from "../utils/session-storage";
 
 type FooterProps = {
   onCheck: () => void;
   status: "correct" | "wrong" | "none" | "completed";
   disabled?: boolean;
   lessonId?: number;
+  isTest: boolean;
+  isLesson: boolean;
+  isPractice?: boolean;
 };
 
 export const Footer = ({
@@ -16,6 +22,9 @@ export const Footer = ({
   status,
   disabled,
   lessonId,
+  isTest,
+  isLesson,
+  isPractice = false,
 }: FooterProps) => {
   useKey("Enter", onCheck, {}, [onCheck]);
   const isMobile = useMedia("(max-width: 1024px)");
@@ -43,29 +52,50 @@ export const Footer = ({
           </div>
         )}
 
-        {status === "completed" && (
+        {status === "completed" && !isPractice && (
           <Button
             variant="default"
             size={isMobile ? "sm" : "lg"}
-            onClick={() => (window.location.href = `/lesson/${lessonId}`)}
+            onClick={() => {
+              updateStatusLesson(
+                Number(SessionStorage.get(SessionKey.LESSON_ID))
+              );
+              SessionStorage.delete(SessionKey.LESSON_ID);
+              if (isTest) {
+                window.location.href = "/lesson";
+              } else {
+                window.location.href = `/lesson/${lessonId}`;
+              }
+            }}
           >
             Practice again
           </Button>
         )}
-
-        <Button
-          disabled={disabled}
-          aria-disabled={disabled}
-          className="ml-auto"
-          onClick={onCheck}
-          size={isMobile ? "sm" : "lg"}
-          variant={status === "wrong" ? "danger" : "secondary"}
-        >
-          {status === "none" && "Check"}
-          {status === "correct" && "Next"}
-          {status === "wrong" && "Retry"}
-          {status === "completed" && "Continue"}
-        </Button>
+        {isTest ? (
+          <Button
+            className="ml-auto"
+            onClick={onCheck}
+            size={isMobile ? "sm" : "lg"}
+            variant="primary"
+          >
+            Continue
+          </Button>
+        ) : (
+          <Button
+            disabled={disabled}
+            aria-disabled={disabled}
+            className="ml-auto"
+            onClick={onCheck}
+            size={isMobile ? "sm" : "lg"}
+            variant={status === "wrong" ? "danger" : "secondary"}
+          >
+            {status === "none" && "Check"}
+            {status === "correct" && "Next"}
+            {status === "wrong" && isLesson && "Next"}
+            {status === "wrong" && !isLesson && "Retry"}
+            {status === "completed" && "Continue"}
+          </Button>
+        )}
       </div>
     </footer>
   );

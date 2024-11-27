@@ -1,12 +1,24 @@
-import React, { useState, useRef, useEffect } from "react";
-import { FaPlus, FaTrash, FaRandom, FaPencilAlt, FaChevronLeft, FaChevronRight, FaCheckCircle } from "react-icons/fa";
+"use client";
+import { redirect } from "next/navigation";
+import React, { useState, useRef, useEffect, FC } from "react";
+import {
+  FaPlus,
+  FaTrash,
+  FaRandom,
+  FaPencilAlt,
+  FaChevronLeft,
+  FaChevronRight,
+  FaCheckCircle,
+} from "react-icons/fa";
+import { SessionKey, SessionStorage } from "../utils/session-storage";
+import { updateStatusLesson } from "@/db/queries";
 
-const FlashcardSet = () => {
-  const [cards, setCards] = useState([
-    { id: 1, word: "Ephemeral", meaning: "Lasting for a very short time" },
-    { id: 2, word: "Ubiquitous", meaning: "Present, appearing, or found everywhere" },
-    { id: 3, word: "Serendipity", meaning: "The occurrence of events by chance in a happy way" }
-  ]);
+interface FlashcardSetProps {
+  initFlashCards: { id: number; word: string; meaning: string }[];
+}
+
+const FlashcardSet: FC<FlashcardSetProps> = (props) => {
+  const [cards, setCards] = useState(props.initFlashCards);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -50,7 +62,7 @@ const FlashcardSet = () => {
     const newCard = {
       id: cards.length + 1,
       word: "New Word",
-      meaning: "New Meaning"
+      meaning: "New Meaning",
     };
     setCards([...cards, newCard]);
   };
@@ -81,38 +93,45 @@ const FlashcardSet = () => {
   const handleComplete = () => {
     setIsCompleted(true);
     setTimeout(() => {
-      setIsCompleted(false);
-      setCurrentIndex(0);
-      setIsFlipped(false);
+      const lesson_id = SessionStorage.get(SessionKey.LESSON_ID) ?? "";
+      updateStatusLesson(Number(lesson_id));
+      SessionStorage.delete(SessionKey.LESSON_ID);
+      redirect("/learn");
     }, 3000);
   };
 
-const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
     if (e.key === "ArrowLeft") {
-        handlePrevious();
+      handlePrevious();
     } else if (e.key === "ArrowRight") {
-        handleNext();
+      handleNext();
     } else if (e.key === " ") {
-        e.preventDefault();
-        handleFlip();
+      e.preventDefault();
+      handleFlip();
     }
-};
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">Flashcards</h1>
-          <p className="text-gray-600">
-            Card {currentIndex + 1} of {cards.length}
-          </p>
+          {!isCompleted && (
+            <p className="text-gray-600">
+              Card {currentIndex + 1} of {cards.length}
+            </p>
+          )}
         </div>
 
         {isCompleted ? (
           <div className="flex flex-col items-center justify-center space-y-4">
             <FaCheckCircle className="text-green-500 text-6xl animate-bounce" />
-            <h2 className="text-2xl font-bold text-green-600">Congratulations!</h2>
-            <p className="text-gray-600">You have completed the flashcard set!</p>
+            <h2 className="text-2xl font-bold text-green-600">
+              Congratulations!
+            </h2>
+            <p className="text-gray-600">
+              You have completed the flashcard set!
+            </p>
           </div>
         ) : (
           <div
@@ -160,57 +179,59 @@ const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
           </div>
         )}
 
-        <div className="flex justify-center items-center gap-4 mt-8">
-          <button
-            onClick={handlePrevious}
-            className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
-            aria-label="Previous card"
-          >
-            <FaChevronLeft className="text-gray-600" />
-          </button>
-          <button
-            onClick={handleEdit}
-            className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
-            aria-label="Edit card"
-          >
-            <FaPencilAlt className="text-gray-600" />
-          </button>
-          <button
-            onClick={handleDelete}
-            className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
-            aria-label="Delete card"
-          >
-            <FaTrash className="text-gray-600" />
-          </button>
-          <button
-            onClick={handleShuffle}
-            className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
-            aria-label="Shuffle cards"
-          >
-            <FaRandom className="text-gray-600" />
-          </button>
-          <button
-            onClick={handleAdd}
-            className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
-            aria-label="Add new card"
-          >
-            <FaPlus className="text-gray-600" />
-          </button>
-          <button
-            onClick={handleNext}
-            className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
-            aria-label="Next card"
-          >
-            <FaChevronRight className="text-gray-600" />
-          </button>
-          <button
-            onClick={handleComplete}
-            className="p-3 rounded-full bg-green-500 text-white shadow-md hover:shadow-lg hover:bg-green-600 transition-all"
-            aria-label="Complete learning"
-          >
-            <FaCheckCircle className="text-xl" />
-          </button>
-        </div>
+        {!isCompleted && (
+          <div className="flex justify-center items-center gap-4 mt-8">
+            <button
+              onClick={handlePrevious}
+              className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
+              aria-label="Previous card"
+            >
+              <FaChevronLeft className="text-gray-600" />
+            </button>
+            <button
+              onClick={handleEdit}
+              className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
+              aria-label="Edit card"
+            >
+              <FaPencilAlt className="text-gray-600" />
+            </button>
+            <button
+              onClick={handleDelete}
+              className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
+              aria-label="Delete card"
+            >
+              <FaTrash className="text-gray-600" />
+            </button>
+            <button
+              onClick={handleShuffle}
+              className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
+              aria-label="Shuffle cards"
+            >
+              <FaRandom className="text-gray-600" />
+            </button>
+            <button
+              onClick={handleAdd}
+              className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
+              aria-label="Add new card"
+            >
+              <FaPlus className="text-gray-600" />
+            </button>
+            <button
+              onClick={handleNext}
+              className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow"
+              aria-label="Next card"
+            >
+              <FaChevronRight className="text-gray-600" />
+            </button>
+            <button
+              onClick={handleComplete}
+              className="p-3 rounded-full bg-green-500 text-white shadow-md hover:shadow-lg hover:bg-green-600 transition-all"
+              aria-label="Complete learning"
+            >
+              <FaCheckCircle className="text-xl" />
+            </button>
+          </div>
+        )}
       </div>
 
       <style jsx>{`

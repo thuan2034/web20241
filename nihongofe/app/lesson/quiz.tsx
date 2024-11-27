@@ -16,13 +16,19 @@ import { Footer } from "./footer";
 import { Header } from "./header";
 import { QuestionBubble } from "./question-bubble";
 import { ResultCard } from "./result-card";
+import { SessionKey, SessionStorage } from "../utils/session-storage";
+import {
+  updateQuestionRightAnswer,
+  updateQuestionWrongAnswer,
+  updateStatusLesson,
+} from "@/db/queries";
 
 const API_BASE_URL = "http://localhost:8080/api";
 
 type QuizProps = {
   initialPercentage: number;
   initialLessonId: number;
-  initialLessonChallenges: ({
+  initialLessonChallenges: {
     id: number;
     challengeId: number;
     text: string;
@@ -30,16 +36,29 @@ type QuizProps = {
     question?: string;
     imageSrc: string;
     audioSrc: string;
-    challengeOptions: { id: number; challengeId: number; text: string; correct: boolean; imageSrc: string; audioSrc: string }[];
+    challengeOptions: {
+      id: number;
+      challengeId: number;
+      option: string;
+      isCorrect: boolean;
+      imageSrc: string;
+      audioSrc: string;
+    }[];
     completed: boolean;
     type: string;
-  })[];
+  }[];
+  isTest: boolean;
+  isLesson: boolean;
+  isPractice?: boolean;
 };
 
 export const Quiz = ({
   initialPercentage,
   initialLessonId,
   initialLessonChallenges,
+  isTest = false,
+  isLesson = false,
+  isPractice = false,
 }: QuizProps) => {
   const [correctAudio, , correctControls] = useAudio({ src: "/correct.wav" });
   const [incorrectAudio, , incorrectControls] = useAudio({
@@ -59,6 +78,7 @@ export const Quiz = ({
     if (initialPercentage === 100) openPracticeModal();
   }, [initialPercentage, openPracticeModal]);
 
+  const [correctQuestions, setCorrectQuestions] = useState(0);
   const [lessonId] = useState(initialLessonId);
   const [percentage, setPercentage] = useState(() => {
     return initialPercentage === 100 ? 0 : initialPercentage;
@@ -92,6 +112,9 @@ export const Quiz = ({
     if (!selectedOption) return;
 
     if (status === "wrong") {
+      if (isLesson) {
+        onNext();
+      }
       setStatus("none");
       setSelectedOption(undefined);
       return;
@@ -104,35 +127,71 @@ export const Quiz = ({
       return;
     }
 
-    const correctOption = options.find((option: { correct: boolean }) => option.correct);
+    const correctOption = options.find((option) => option.isCorrect);
     if (!correctOption) return;
 
+    if (isTest) {
+      if (correctOption.id === selectedOption) {
+        setCorrectQuestions(correctQuestions + 1);
+        setChallenges((prevChallenges) =>
+          prevChallenges.map((ch) =>
+            ch.id === challenge.id ? { ...ch, completed: true } : ch
+          )
+        );
+        updateQuestionRightAnswer(challenge.id);
+      } else {
+        updateQuestionWrongAnswer(challenge.id);
+      }
+      setPercentage((prev) => prev + 100 / challenges.length);
+      onNext();
+      setSelectedOption(undefined);
+      return;
+    }
+
     if (correctOption.id === selectedOption) {
-      startTransition(() => {
-        axios
-          .post(`${API_BASE_URL}/challenge-progress`, { challengeId: challenge.id })
-          .then(() => {
-            void correctControls.play();
-            setStatus("correct");
-            setPercentage((prev) => prev + 100 / challenges.length);
-            setChallenges((prevChallenges) =>
-              prevChallenges.map((ch) =>
-                ch.id === challenge.id ? { ...ch, completed: true } : ch
-              )
-            );
-          })
-          .catch(() => toast.error("Something went wrong. Please try again."));
-      });
+      void correctControls.play();
+      setCorrectQuestions(correctQuestions + 1);
+      setStatus("correct");
+      setPercentage((prev) => prev + 100 / challenges.length);
+      setChallenges((prevChallenges) =>
+        prevChallenges.map((ch) =>
+          ch.id === challenge.id ? { ...ch, completed: true } : ch
+        )
+      );
+      updateQuestionRightAnswer(challenge.id);
+      // startTransition(() => {
+      //   axios
+      //     .post(`${API_BASE_URL}/challenge-progress`, {
+      //       challengeId: challenge.id,
+      //     })
+      //     .then(() => {
+      //       void correctControls.play();
+      //       setStatus("correct");
+      //       setPercentage((prev) => prev + 100 / challenges.length);
+      //       setChallenges((prevChallenges) =>
+      //         prevChallenges.map((ch) =>
+      //           ch.id === challenge.id ? { ...ch, completed: true } : ch
+      //         )
+      //       );
+      //     })
+      //     .catch(() => toast.error("Something went wrong. Please try again."));
+      // });
     } else {
-      startTransition(() => {
-        axios
-          .post(`${API_BASE_URL}/reduce-hearts`, { challengeId: challenge.id })
-          .then(() => {
-            void incorrectControls.play();
-            setStatus("wrong");
-          })
-          .catch(() => toast.error("Something went wrong. Please try again."));
-      });
+      void incorrectControls.play();
+      setStatus("wrong");
+      if (isLesson) {
+        updateQuestionWrongAnswer(challenge.id);
+        setPercentage((prev) => prev + 100 / challenges.length);
+      }
+      // startTransition(() => {
+      //   axios
+      //     .post(`${API_BASE_URL}/reduce-hearts`, { challengeId: challenge.id })
+      //     .then(() => {
+      //       void incorrectControls.play();
+      //       setStatus("wrong");
+      //     })
+      //     .catch(() => toast.error("Something went wrong. Please try again."));
+      // });
     }
   };
 
@@ -148,35 +207,59 @@ export const Quiz = ({
           height={height}
         />
         <div className="mx-auto flex h-full max-w-lg flex-col items-center justify-center gap-y-4 text-center lg:gap-y-8">
-          <Image
-            src="/finish.svg"
-            alt="Finish"
-            className="hidden lg:block"
-            height={100}
-            width={100}
-          />
+          {!(isTest && correctQuestions < challenges.length / 2) && (
+            <>
+              <Image
+                src="/finish.svg"
+                alt="Finish"
+                className="hidden lg:block"
+                height={100}
+                width={100}
+              />
 
-          <Image
-            src="/finish.svg"
-            alt="Finish"
-            className="block lg:hidden"
-            height={100}
-            width={100}
-          />
+              <Image
+                src="/finish.svg"
+                alt="Finish"
+                className="block lg:hidden"
+                height={100}
+                width={100}
+              />
+            </>
+          )}
 
-          <h1 className="text-lg font-bold text-neutral-700 lg:text-3xl">
-            Great job! <br /> You&apos;ve completed the lesson.
-          </h1>
-
-          <div className="flex w-full items-center gap-x-4">
-            <ResultCard variant="points" value={challenges.length * 10} />
-          </div>
+          {isTest && correctQuestions < challenges.length / 2 ? (
+            <h1 className="text-lg font-bold text-neutral-700 lg:text-3xl">
+              You&apos;ve failed the lesson 🥲
+            </h1>
+          ) : (
+            <h1 className="text-lg font-bold text-neutral-700 lg:text-3xl">
+              Great job! <br /> You&apos;ve completed the lesson.
+            </h1>
+          )}
+          {!isPractice && (
+            <div className="flex w-full items-center gap-x-4">
+              <ResultCard variant="points" value={correctQuestions * 10} />
+            </div>
+          )}
         </div>
 
         <Footer
           lessonId={lessonId}
           status="completed"
-          onCheck={() => router.push("/learn")}
+          onCheck={() => {
+            updateStatusLesson(
+              Number(SessionStorage.get(SessionKey.LESSON_ID))
+            );
+            SessionStorage.delete(SessionKey.LESSON_ID);
+            if (isPractice) {
+              router.push("/practice");
+            } else {
+              router.push("/learn");
+            }
+          }}
+          isTest={isTest}
+          isLesson={isLesson}
+          isPractice={isPractice}
         />
       </>
     );
@@ -185,15 +268,13 @@ export const Quiz = ({
   const title =
     challenge.type === "ASSIST"
       ? "Select the correct meaning"
-      : challenge.text;
+      : challenge.question;
 
   return (
     <>
       {incorrectAudio}
       {correctAudio}
-      <Header
-        percentage={percentage}
-      />
+      <Header percentage={percentage} />
 
       <div className="flex-1">
         <div className="flex h-full items-center justify-center">
@@ -224,6 +305,8 @@ export const Quiz = ({
         disabled={pending || !selectedOption}
         status={status}
         onCheck={onContinue}
+        isTest={isTest}
+        isLesson={isLesson}
       />
     </>
   );

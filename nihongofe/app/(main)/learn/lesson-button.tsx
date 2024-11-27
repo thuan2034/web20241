@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 import "react-circular-progressbar/dist/styles.css";
+import { SessionKey, SessionStorage } from "@/app/utils/session-storage";
 
 type LessonButtonProps = {
   id: number;
@@ -46,8 +47,13 @@ export const LessonButton = ({
 
   const href = isCompleted ? `/lesson/${id}` : "/lesson";
 
+  const saveStorage = () => {
+    SessionStorage.set(SessionKey.LESSON_ID, id.toString());
+  };
+
   return (
     <Link
+      onClick={saveStorage}
       href={href}
       aria-disabled={locked}
       style={{ pointerEvents: locked ? "none" : "auto" }}
