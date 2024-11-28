@@ -12,7 +12,6 @@ export const useExitModal = create<ExitModalState>((set) => ({
   open: () => set({ isOpen: true }),
   close: () => set({ isOpen: false }),
   onConfirm: () => {
-    // Add your redirection logic here
     window.location.href = "/learn";
   },
 }));

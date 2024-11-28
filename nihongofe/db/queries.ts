@@ -72,24 +72,52 @@ export const getPractices = cache(async () => {
 });
 
 export const updateQuestionRightAnswer = cache(async (questionId: number) => {
-  console.log("RIGHT");
-  // call api
+  try {
+    const response = await axios.post(`${API_BASE_URL}/questions/right-answer`, {
+      questionId,
+    });
+    console.log(response.data.message);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating right answer:", error);
+    throw error;
+  }
 });
 
 export const updateQuestionWrongAnswer = cache(async (questionId: number) => {
-  console.log("WRONG");
-  // call api
+  try {
+    const response = await axios.post(`${API_BASE_URL}/questions/wrong-answer`, {
+      questionId,
+    });
+    console.log(response.data.message);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating wrong answer:", error);
+    throw error;
+  }
 });
 
 export const updateStatusLesson = cache(async (lessonId: number) => {
-  console.log("Update Lesson");
-  // call api
+  try {
+    const response = await axios.post(`${API_BASE_URL}/lessons/update-status`, {
+      lessonId
+    });
+    console.log(response.data.message);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating lesson status:", error);
+    throw error;
+  }
 });
 
 export const getUnits = cache(async () => {
-  // const response = await axios.get(`${API_BASE_URL}/units`);
-  // return response.data;
-
+  // try {
+  //   const response = await axios.get(`${API_BASE_URL}/units`);
+  //   return response.data;
+  // } catch (error) {
+  //   console.error("Error fetching units:", error);
+  //   throw error;
+  // }
   return units;
 });
 
@@ -456,6 +484,6 @@ export const getUserProgress = cache(async () => {
 
   return {
     points: 10,
-    lessonPercentage: 50,
+    lessonPercentage: 100,
   };
 });
