@@ -2,9 +2,9 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import type { ComponentProps } from "react";
 import React, { useState } from "react";
-import { LanguageDropDown } from "~/components/LanguageDropDown";
-import type { LoginScreenState } from "~/components/LoginScreen";
-import { LoginScreen } from "~/components/LoginScreen";
+import { LanguageDropDown } from "../components/LanguageDropDown";
+import type { LoginScreenState } from "../components/LoginScreen";
+import { LoginScreen } from "../components/LoginScreen";
 
 const MenuIconSvg = (props: ComponentProps<"svg">) => {
   return (

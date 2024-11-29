@@ -1,8 +1,9 @@
+"use client";
 import type { NextPage } from "next";
 import React, { useEffect } from "react";
-import { LeftBar } from "../components/LeftBar";
-import { BottomBar } from "../components/BottomBar";
-import { useBoundStore } from "../hooks/useBoundStore";
+import { LeftBar } from "../../components/LeftBar";
+import { BottomBar } from "../../components/BottomBar";
+import { useBoundStore } from "../../hooks/useBoundStore";
 import Link from "next/link";
 import {
   BronzeLeagueSvg,
@@ -13,10 +14,10 @@ import {
   LockedLeagueSvg,
   SecondPlaceSvg,
   ThirdPlaceSvg,
-} from "../components/Svgs";
+} from "../../components/Svgs";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import { useLeaderboardUsers } from "../hooks/useLeaderboard";
+import { useLeaderboardUsers } from "../../hooks/useLeaderboard";
 import Image from "next/image";
 
 const LeaderboardExplanationSection = () => {

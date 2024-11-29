@@ -2,11 +2,11 @@ import type { NextPage } from "next";
 import type { ComponentProps } from "react";
 import React from "react";
 
-import { BottomBar } from "~/components/BottomBar";
-import { LeftBar } from "~/components/LeftBar";
-import { RightBar } from "~/components/RightBar";
-import { TopBar } from "~/components/TopBar";
-import { StreakFreezeSvg, EmptyGemSvg,DoubleOrNothingSvg,DuoPlushieSvg } from "~/components/Svgs";
+import { BottomBar } from "../components/BottomBar";
+import { LeftBar } from "../components/LeftBar";
+import { RightBar } from "../components/RightBar";
+import { TopBar } from "../components/TopBar";
+import { StreakFreezeSvg, EmptyGemSvg,DoubleOrNothingSvg,DuoPlushieSvg } from "../components/Svgs";
 
 const Shop: NextPage = () => {
   const streakFreezes = 0;

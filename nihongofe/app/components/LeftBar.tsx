@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import type { Tab } from "./BottomBar";
 import { useBottomBarItems } from "./BottomBar";
 import type { LoginScreenState } from "./LoginScreen";
-import { LoginScreen } from "./LoginScreen";
 import { GlobeIconSvg, PodcastIconSvg } from "./Svgs";
 import { useBoundStore } from "../hooks/useBoundStore";
 
@@ -147,10 +146,6 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
           </div>
         </ul>
       </nav>
-      <LoginScreen
-        loginScreenState={loginScreenState}
-        setLoginScreenState={setLoginScreenState}
-      />
     </>
   );
 };

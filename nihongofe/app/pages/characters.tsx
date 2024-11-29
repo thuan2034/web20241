@@ -2,10 +2,10 @@
 import type { NextPage } from "next";
 import React from "react";
 
-import { BottomBar } from "~/components/BottomBar";
-import { LeftBar } from "~/components/LeftBar";
-import { RightBar } from "~/components/RightBar";
-import { TopBar } from "~/components/TopBar";
+import { BottomBar } from "../components/BottomBar";
+import { LeftBar } from "../components/LeftBar";
+import { RightBar } from "../components/RightBar";
+import { TopBar } from "../components/TopBar";
 
 const Shop: NextPage = () => {
   return (

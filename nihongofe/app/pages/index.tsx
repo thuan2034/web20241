@@ -1,10 +1,10 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import { GlobeSvg } from "~/components/Svgs";
+import { GlobeSvg } from "../components/Svgs";
 import React from "react";
-import { LanguageHeader } from "~/components/LanguageHeader";
-import { useLoginScreen, LoginScreen } from "~/components/LoginScreen";
-import { LanguageCarousel } from "~/components/LanguageCarousel";
+import { LanguageHeader } from "../components/LanguageHeader";
+import { useLoginScreen, LoginScreen } from "../components/LoginScreen";
+import { LanguageCarousel } from "../components/LanguageCarousel";
 
 const Home: NextPage = () => {
   const { loginScreenState, setLoginScreenState } = useLoginScreen();

@@ -1,13 +1,13 @@
 import type { NextPage } from "next";
 import type { ComponentProps } from "react";
 import React, { useState } from "react";
-import { BottomBar } from "~/components/BottomBar";
-import { LeftBar } from "~/components/LeftBar";
-import { TopBar } from "~/components/TopBar";
-import { useBoundStore } from "~/hooks/useBoundStore";
-import { SettingsRightNav } from "~/components/SettingsRightNav";
+import { BottomBar } from "../../components/BottomBar";
+import { LeftBar } from "../../components/LeftBar";
+import { TopBar } from "../../components/TopBar";
+import { useBoundStore } from "../../hooks/useBoundStore";
+import { SettingsRightNav } from "../../components/SettingsRightNav";
 
-import {CoachSvg} from "~/components/Svgs";
+import {CoachSvg} from "../../components/Svgs";
 
 const goalXpOptions = [
   { title: "Basic", xp: 1 },

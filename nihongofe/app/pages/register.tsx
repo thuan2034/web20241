@@ -1,12 +1,12 @@
 import type { NextPage } from "next";
 import Link from "next/link";
-import { LanguageHeader } from "src/components/LanguageHeader";
-import jlpt from "~/utils/jlpt";
+import { LanguageHeader } from "../components/LanguageHeader";
+import jlpt from "../utils/jlpt";
 
 const Register: NextPage = () => {
   return (
     <main
-      className="flex min-h-screen flex-col items-center bg-white text-black"
+      className="flex min-h-screen flex-col items-..ter bg-white text-black"
     >
       <LanguageHeader />
       <div className="container flex grow flex-col items-center justify-center gap-20 px-4 py-16">
