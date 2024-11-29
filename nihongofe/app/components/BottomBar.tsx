@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useBoundStore } from "../hooks/useBoundStore";
 
 type BottomBarItem = {
   name: Tab;
@@ -6,14 +7,14 @@ type BottomBarItem = {
   icon: JSX.Element;
 };
 
-export type Tab = "Learn" | "Characters"| "Shop" | "Profile" | "Leaderboards" ;
+export type Tab = "Học" | "Bảng chữ cái"| "Cửa hàng" | "Hồ sơ" | "Bảng xếp hạng" ;
 
 export const useBottomBarItems = () => {
-  const loggedIn = useStore((x) => x.loggedIn);
+  const loggedIn = useBoundStore((x) => x.loggedIn);
 
   const bottomBarItems: BottomBarItem[] = [
     {
-      name: "Learn",
+      name: "Học",
       href: "/learn",
       icon: (
         <svg
@@ -46,7 +47,7 @@ export const useBottomBarItems = () => {
       ),
     },
     {
-      name: "Characters",
+      name: "Bảng chữ cái",
       href: "/characters",
       icon: (
         <svg
@@ -78,7 +79,7 @@ export const useBottomBarItems = () => {
       ),
     },
     {
-      name: "Shop",
+      name: "Cửa hàng",
       href: "/shop",
       icon: (
         <svg
@@ -122,7 +123,7 @@ export const useBottomBarItems = () => {
       ),
     },
     {
-      name: "Profile",
+      name: "Hồ sơ",
       href: loggedIn ? "/profile" : "/learn?sign-up",
       icon: (
         <svg
@@ -170,7 +171,7 @@ export const useBottomBarItems = () => {
 
   if (loggedIn) {
     bottomBarItems.splice(2, 0, {
-      name: "Leaderboards",
+      name: "Bảng xếp hạng",
       href: "/leaderboard",
       icon: (
         <svg width="46" height="46" viewBox="0 0 46 46" fill="none">

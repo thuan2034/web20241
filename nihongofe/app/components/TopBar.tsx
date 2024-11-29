@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import type { ComponentProps } from "react";
 import React, { useState } from "react";
+import { useBoundStore } from "../hooks/useBoundStore";
 import { Calendar } from "./Calendar";
 import { Flag } from "./Flag";
 import {
@@ -72,9 +73,9 @@ export const TopBar = ({
 }) => {
   const [menu, setMenu] = useState<MenuState>("HIDDEN");
   const [now, setNow] = useState(dayjs());
-  const streak = useStore((x) => x.streak);
-  const lingots = useStore((x) => x.lingots);
-  const language = useStore((x) => x.language);
+  const streak = useBoundStore((x) => x.streak);
+  const lingots = useBoundStore((x) => x.lingots);
+  const language = useBoundStore((x) => x.language);
   return (
     <header className="fixed z-20 h-[58px] w-full">
       <div
@@ -168,14 +169,14 @@ export const TopBar = ({
                     <div className="flex flex-col gap-3">
                       <h2 className="text-xl font-bold text-black">Lingots</h2>
                       <p className="text-sm font-normal text-gray-400">
-                        You have {lingots}{" "}
+                        Bạn sở hữu {lingots}{" "}
                         {lingots === 1 ? "Đá quý" : "Nhiều đá quý"}.
                       </p>
                       <Link
                         className="font-bold uppercase text-blue-400 transition hover:brightness-110"
                         href="/shop"
                       >
-                        Go to shop
+                        Đến cửa hàng
                       </Link>
                     </div>
                   </div>

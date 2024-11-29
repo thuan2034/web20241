@@ -37,8 +37,8 @@ export const Sidebar = ({ className }: Props) => {
           iconSrc="https://d35aaqx5ub95lt.cloudfront.net/vendor/80a60f598d6a6b0493aeb4d7b93fc0e3.svg"
         />
         <SidebarItem
-          label="Practice"
-          href="/Practice"
+          label="practice"
+          href="/practice"
           iconSrc="/practice.svg"
         />
         <SidebarItem
