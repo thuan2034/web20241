@@ -7,5 +7,8 @@ import java.util.List;
 
 public interface UnitService {
     ResponseEntity<List<UnitDTO>> getAllUnits();
+
+    ResponseEntity<List<UnitDTO>> getUnitsByLevel(String level);
+
     ResponseEntity<UnitDTO> getUnitById(Integer unitId);
 }

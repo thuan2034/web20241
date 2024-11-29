@@ -10,8 +10,9 @@ public class UnitMapper {
         UnitDTO unitDTO = new UnitDTO();
         unitDTO.setId(unit.getUnitId());
         unitDTO.setDisplayOrder(unit.getDisplayOrder());
-        unitDTO.setName(unit.getName());
-        unitDTO.setLevel(unit.getLevel()); // Map level
+        unitDTO.setTitle(unit.getName());
+        unitDTO.setLevel(unit.getLevel());
+        unitDTO.setDescription(unit.getDescription());
         return unitDTO;
     }
 
@@ -19,7 +20,7 @@ public class UnitMapper {
         Unit unit = new Unit();
         unit.setUnitId(unitDTO.getId());
         unit.setDisplayOrder(unitDTO.getDisplayOrder());
-        unit.setName(unitDTO.getName());
+        unit.setName(unitDTO.getTitle());
         unit.setLevel(unitDTO.getLevel());
         return unit;
     }
