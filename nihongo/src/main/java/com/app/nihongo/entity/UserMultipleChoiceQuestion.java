@@ -21,8 +21,8 @@ public class UserMultipleChoiceQuestion {
     private MultipleChoiceQuestion multipleChoiceQuestion;
 
     @Column(nullable = false)
-    private Boolean isCompleted = false; // Đánh dấu hoàn thành
+    private Boolean isCompleted = false;
 
     @Column
-    private Integer score; // Điểm số, nếu cần lưu trữ
+    private Integer score;
 }
