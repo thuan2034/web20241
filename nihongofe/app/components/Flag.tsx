@@ -1,5 +1,5 @@
 import type { StaticImageData } from "next/image";
-import _flagsSvg from "../../public/flags.svg";
+import _flagsSvg from "../../public/jp.svg";
 import type { Language } from "../utils/languages";
 
 const flagsSvg = _flagsSvg as StaticImageData;
