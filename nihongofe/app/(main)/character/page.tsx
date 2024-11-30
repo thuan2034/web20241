@@ -1,5 +1,5 @@
 import React from 'react';
-import CharactersPage from './charactersPage'; // Adjust the path to your CharactersPage component
+import CharactersPage from './charactersPage';
 import { StickyWrapper } from "@/components/stickywrapper";
 import { FeedWrapper } from "@/components/feedwrapper";
 import { UserProgress } from "@/components/userprogress";
