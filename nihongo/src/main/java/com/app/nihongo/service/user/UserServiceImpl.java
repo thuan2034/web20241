@@ -2,7 +2,9 @@ package com.app.nihongo.service.user;
 
 
 import com.app.nihongo.dao.UserRepository;
+import com.app.nihongo.dto.UserExpDTO;
 import com.app.nihongo.dto.UserDTO;
+import com.app.nihongo.dto.UserInfoDTO;
 import com.app.nihongo.entity.User;
 import com.app.nihongo.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -107,6 +108,32 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Failed to update user");
+        }
+    }
+    @Override
+    public Integer getUserExperience(Integer userId) {
+        return userRepository.calculateExperience(userId);
+    }
+
+    @Override
+    public List<UserExpDTO> getUserExpByLevel(String level) {
+        return userRepository.findUserExpByLevel(level);
+    }
+    @Override
+    public ResponseEntity<UserInfoDTO> getUserInfoById(Integer userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            Integer userXP = getUserExperience(userId);
+            String name = (user.getFirstName() != null ? user.getFirstName() : "") + " " +
+                    (user.getLastName() != null ? user.getLastName() : "");
+            String phone = user.getPhoneNumber();
+            String email = user.getEmail();
+
+            UserInfoDTO userInfo = new UserInfoDTO(name.trim(), userXP, phone, email);
+
+            return ResponseEntity.ok(userInfo);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }
