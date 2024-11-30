@@ -71,7 +71,7 @@ export const getPractices = cache(async () => {
   return practices;
 });
 
-export const updateQuestionRightAnswer = cache(async (questionId: number) => {
+export const updateQuestionRightAnswer = cache(async (questionId: number, userId: number, type: string) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/questions/right-answer`, {
       questionId,
@@ -84,7 +84,7 @@ export const updateQuestionRightAnswer = cache(async (questionId: number) => {
   }
 });
 
-export const updateQuestionWrongAnswer = cache(async (questionId: number) => {
+export const updateQuestionWrongAnswer = cache(async (questionId: number, userId: number, type: string) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/questions/wrong-answer`, {
       questionId,
@@ -97,7 +97,7 @@ export const updateQuestionWrongAnswer = cache(async (questionId: number) => {
   }
 });
 
-export const updateStatusLesson = cache(async (lessonId: number) => {
+export const updateStatusLesson = cache(async (lessonId: number, userId: number) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/lessons/update-status`, {
       lessonId
@@ -162,7 +162,7 @@ export const getPracticeChallenges = cache(async () => {
   return challenges;
 });
 
-export const isLessonCompleted = cache(async (lessonId: number) => {
+export const isLessonCompleted = cache(async (lessonId: number, userId: number) => {
   const units = await getUnits();
   const lesson = units
     .flatMap((unit: { lessons: any[] }) => unit.lessons)
