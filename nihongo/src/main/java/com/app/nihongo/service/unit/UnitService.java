@@ -11,4 +11,7 @@ public interface UnitService {
     ResponseEntity<List<UnitDTO>> getUnitsByLevel(String level);
 
     ResponseEntity<UnitDTO> getUnitById(Integer unitId);
+
+    ResponseEntity<List<UnitDTO>> getAllUnitsWithStatus(Integer userId);
+
 }
