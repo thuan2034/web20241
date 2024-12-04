@@ -10,10 +10,10 @@ public class Lesson {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "lesson_id")
     private Integer lessonId;
     private String lessonTitle;
     private Integer displayOrder;
-    private String status;
     private String type;
 
     @ManyToOne

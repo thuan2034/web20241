@@ -51,7 +51,6 @@ public class User {
     private boolean isActived;
 
     @Column(name = "avatar", columnDefinition = "TEXT")
-    @Lob
     private String avatar;
 
 

@@ -16,8 +16,8 @@ public class UnitController {
     private UnitService unitService;
 
     @GetMapping
-    public ResponseEntity<List<UnitDTO>> getAllUnits() {
-        return unitService.getAllUnits();
+    public ResponseEntity<List<UnitDTO>> getAllUnits(@RequestParam Integer userId) {
+        return unitService.getAllUnitsWithStatus(userId);
     }
     @GetMapping("/by-level")
     public ResponseEntity<List<UnitDTO>> getUnitsByLevel(@RequestParam String level) {
