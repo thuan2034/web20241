@@ -31,7 +31,6 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    @Autowired
     public DaoAuthenticationProvider authenticationProvider(UserService userService){
         DaoAuthenticationProvider dap = new DaoAuthenticationProvider();
         dap.setUserDetailsService(userService);

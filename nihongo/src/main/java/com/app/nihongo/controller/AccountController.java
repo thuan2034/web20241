@@ -46,9 +46,9 @@ public class AccountController {
     }
     @PostMapping("/login")
     public ResponseEntity<?> dangNhap(@RequestBody LoginRequest loginRequest){
-
         // Xác thực người dùng bằng tên đăng nhập và mật khẩu
         try {
+
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
             );
@@ -62,6 +62,7 @@ public class AccountController {
             // Xác thực không thành công, trả về lỗi hoặc thông báo
             return ResponseEntity.badRequest().body("Tên đăng nhập hặc mật khẩu không chính xác.");
         }
+        System.out.println(3);
         return ResponseEntity.badRequest().body("Xác thực không thành công.");
     }
 }
