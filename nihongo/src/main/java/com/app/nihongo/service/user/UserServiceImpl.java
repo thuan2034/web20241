@@ -51,15 +51,15 @@ public class UserServiceImpl implements UserService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), AuthorityUtils.NO_AUTHORITIES);
 
     }
+
     @Override
     public ResponseEntity<?> delete(int id) {
-        try{
+        try {
 
             User user = userRepository.findByUserId(id);
 
 
-
-                userRepository.deleteById(id);
+            userRepository.deleteById(id);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,6 +110,7 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.badRequest().body("Failed to update user");
         }
     }
+
     @Override
     public Integer getUserExperience(Integer userId) {
         return userRepository.calculateExperience(userId);
@@ -119,6 +120,7 @@ public class UserServiceImpl implements UserService {
     public List<UserExpDTO> getUserExpByLevel(String level) {
         return userRepository.findUserExpByLevel(level);
     }
+
     @Override
     public ResponseEntity<UserInfoDTO> getUserInfoById(Integer userId) {
         User user = userRepository.findById(userId).orElse(null);

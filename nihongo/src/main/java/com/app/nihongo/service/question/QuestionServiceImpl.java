@@ -3,17 +3,19 @@ package com.app.nihongo.service.question;
 import com.app.nihongo.dao.FlashcardRepository;
 import com.app.nihongo.dao.MultipleChoiceQuestionRepository;
 import com.app.nihongo.dao.UserMultipleChoiceQuestionRepository;
-import com.app.nihongo.dto.FlashcardDTO;
-import com.app.nihongo.dto.MultipleChoiceQuestionDTO;
-import com.app.nihongo.dto.UserFailedQuestionDTO;
+import com.app.nihongo.dto.*;
+import com.app.nihongo.entity.MultipleChoiceQuestion;
+import com.app.nihongo.entity.User;
+import com.app.nihongo.entity.UserMultipleChoiceQuestion;
 import com.app.nihongo.enums.QuestionType;
 import com.app.nihongo.mapper.FlashcardMapper;
 import com.app.nihongo.mapper.MultipleChoiceQuestionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,4 +92,88 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
+    @Override
+    public void saveAnswer(Integer userId, Integer questionId, QuestionType type, boolean isCorrect) {
+        // hiện tại chỉ có MULTIPLE_CHOICE
+        switch (type) {
+            case MULTIPLE_CHOICE:
+        Optional<UserMultipleChoiceQuestion> existingAnswer = userMultipleChoiceQuestionRepository
+                .findByUser_UserIdAndMultipleChoiceQuestion_McqId(userId, questionId);
+
+        if (existingAnswer.isPresent()) {
+
+            UserMultipleChoiceQuestion userAnswer = existingAnswer.get();
+            userAnswer.setIsCompleted(isCorrect);
+            userMultipleChoiceQuestionRepository.save(userAnswer);
+        } else {
+
+            UserMultipleChoiceQuestion newAnswer = new UserMultipleChoiceQuestion();
+            User user = new User();
+            user.setUserId(userId);
+            newAnswer.setUser(user);
+            MultipleChoiceQuestion multipleChoiceQuestion = new MultipleChoiceQuestion();
+            multipleChoiceQuestion.setMcqId(questionId);
+            newAnswer.setMultipleChoiceQuestion(multipleChoiceQuestion);
+            newAnswer.setIsCompleted(isCorrect);
+            userMultipleChoiceQuestionRepository.save(newAnswer);
+        }
+        break;
+            default:
+                throw new IllegalArgumentException("Invalid question type: " + type);
+        }
+    }
+    @Override
+    public ResponseEntity<?> getFailedQuestionsByUnit(Integer userId, Integer unitId, QuestionType type) {
+        switch (type) {
+            case MULTIPLE_CHOICE:
+
+        // dữ liệu phẳng
+        List<FailedMultipleChoiceQuestionDTO> flatQuestions = userMultipleChoiceQuestionRepository
+                .findFailedMultipleChoiceQuestionsByUserIdAndUnitId(userId, unitId);
+
+        //nhóm theo mcq_id
+        Map<Integer, MultipleChoiceQuestionDTO> questionMap = new HashMap<>();
+
+        for (FailedMultipleChoiceQuestionDTO dto : flatQuestions) {
+            // câu hỏi chưa có trong map -> tạo mới
+            if (!questionMap.containsKey(dto.getMcqId())) {
+                questionMap.put(dto.getMcqId(), new MultipleChoiceQuestionDTO(dto.getMcqId(), dto.getQuestionContent(), dto.getIsCompleted()));
+                questionMap.get(dto.getMcqId()).setChallengeOptions(new ArrayList<>());
+            }
+            //add option
+            MultipleChoiceQuestionOptionDTO optionDTO = new MultipleChoiceQuestionOptionDTO(dto.getOptionId(), dto.getOption(), dto.getIsCorrect());
+            questionMap.get(dto.getMcqId()).getChallengeOptions().add(optionDTO);
+        }
+
+        List<MultipleChoiceQuestionDTO> result = new ArrayList<>(questionMap.values());
+        return ResponseEntity.ok(result);
+            default:
+                throw new IllegalArgumentException("Invalid question type: " + type);
+        }
+    }
+    @Override
+    public void updatePractice(Integer userId, Integer unitId,QuestionType type) {
+        switch (type) {
+            case MULTIPLE_CHOICE:
+
+
+                List<Integer> uncompletedQuestionIds = userMultipleChoiceQuestionRepository
+                .findFailedQuestionIdsByUserIdAndUnitId(userId, unitId);
+
+        uncompletedQuestionIds.forEach(mcqId -> {
+            Optional<UserMultipleChoiceQuestion> userAnswer = userMultipleChoiceQuestionRepository
+                    .findByUser_UserIdAndMultipleChoiceQuestion_McqId(userId, mcqId);
+
+            userAnswer.ifPresent(answer -> {
+                if (!answer.getIsCompleted()) {
+                    answer.setIsCompleted(true);
+                    userMultipleChoiceQuestionRepository.save(answer);
+                }
+            });
+        });
+        break;
+            default:
+                throw new IllegalArgumentException("Invalid question type: " + type);
+        }
+    }
 }
