@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserExpDTO {
     private Integer userId;
+    private String name;
     private Integer exp;
 
 }

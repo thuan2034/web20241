@@ -31,6 +31,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("""
     SELECT new com.app.nihongo.dto.UserExpDTO(
         a.userId,
+        a.username,
         CAST(COALESCE(SUM(CASE WHEN e.isCompleted = TRUE THEN 10 ELSE 0 END), 0) AS integer)
     )
     FROM User a
