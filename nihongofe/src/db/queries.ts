@@ -214,7 +214,34 @@ export const getPracticeUnit = async (
 
   return response.data;
 };
+export const checkNewUser = async (
+  userId: number,
+) => {
+  const A = 36;
+  const response = await axios.get(
+    `${API_BASE_URL}/api/user/check-new-user/${userId}`,
+  );
 
+  return response.data;
+};
+export const setUserLevel = async (
+  userId: number,
+  level: string,
+) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/units/set-level?userId=${userId}&level=${level}`,
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Axios error:', error.message);
+    } else {
+      console.error('Unexpected error:', error);
+    }
+    throw error; // Re-throw the error after logging it
+  }
+};
 export const getUserProgress = async () => {
   // const response = await axios.get(`${API_BASE_URL}/user-progress`);
   // return response.data;

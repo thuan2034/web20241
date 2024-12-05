@@ -12,7 +12,6 @@ function AccountActive() {
       thucHienKichHoat();
     }
   }, [email, maKichHoat]); // Chạy lại khi email hoặc maKichHoat thay đổi
-
   const thucHienKichHoat = async () => {
     console.log("Email:", email);
     console.log("MaKichHoat:", maKichHoat);
@@ -22,6 +21,9 @@ function AccountActive() {
 
       if (response.ok) {
         setDaKichHoat(true);
+        setTimeout(() => {
+          void router.push("/");
+        }, 5000);
       } else {
         setThongBao(await response.text());
       }

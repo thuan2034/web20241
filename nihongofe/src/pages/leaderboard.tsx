@@ -138,15 +138,17 @@ const Leaderboard: NextPage = () => {
           </div>
           {experiences.length === 0 && <div>Chưa tham gia</div>}
           <div className="w-full">
-            {experiences.map((user, i) => (
-              <LeaderboardProfile
-                key={user.userId}
-                place={i + 1}
-                name={user.name}
-                exp={user.exp}
-                userId={user.userId}
-              />
-            ))}
+            {experiences
+              .sort((a, b) => b.exp - a.exp)
+              .map((user, i) => (
+                <LeaderboardProfile
+                  key={user.userId}
+                  place={i + 1}
+                  name={user.name}
+                  exp={user.exp}
+                  userId={user.userId}
+                />
+              ))}
           </div>
         </div>
       </div>

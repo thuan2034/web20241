@@ -4,9 +4,10 @@ import type { ComponentProps } from "react";
 import React, { useEffect, useRef, useState } from "react";
 import { useBoundStore } from "src/hooks/useBoundStore";
 import { useRouter } from "next/router";
-import { signin, signup } from "~/db/queries";
+import { checkNewUser, signin, signup } from "~/db/queries";
 import Fetching from "./Fetching";
 import { useToast } from "~/context/toast";
+import { getIdUserByToken } from "~/utils/JWTService";
 
 export const GoogleLogoSvg = (props: ComponentProps<"svg">) => {
   return (
@@ -101,7 +102,8 @@ export const LoginScreen = ({
       try {
         setLoading(true);
         await signup(form);
-        void router.push("/register");
+        addToast("Đăng ký thành công", "success");
+        void router.push("/");
       } catch (error) {
         addToast(String(error), "error");
       } finally {
@@ -116,17 +118,22 @@ export const LoginScreen = ({
     } else {
       try {
         setLoading(true);
-        await signin({
+        const user = await signin({
           username: form.email,
           password: form.password,
         });
+        const userId = getIdUserByToken();
         setForm({
           username: "",
           age: "",
           email: "",
           password: "",
         });
-        void router.push("/learn");
+        if (userId != null && !(await checkNewUser(userId))) {
+          void router.push("/register");
+        } else {
+          void router.push("/learn");
+        }
       } catch (error) {
         console.log(error);
         addToast(String(error), "error");
