@@ -15,4 +15,5 @@ public interface UnitService {
     ResponseEntity<List<UnitDTO>> getAllUnitsWithStatus(Integer userId);
 
 
+    boolean userLessonStatusExist(Integer userId);
 }

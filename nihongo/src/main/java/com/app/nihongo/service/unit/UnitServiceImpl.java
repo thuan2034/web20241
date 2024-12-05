@@ -127,5 +127,9 @@ public class UnitServiceImpl implements UnitService {
         return ResponseEntity.ok(result);
     }
 
+    @Override
+    public boolean userLessonStatusExist(Integer userId) {
+        return userLessonStatusRepository.existsById_UserId(userId);
+    }
 
 }

@@ -63,7 +63,7 @@ public class AccountService implements IAccountService{
         String subject = "Kích hoạt tài khoản";
         String text = "Vui lòng sử dụng mã sau để kich hoạt cho tài khoản <"+email+">:<html><body><br/><h1>"+activeNumber+"</h1></body></html>";
         text+="<br/> Click vào đường link để kích hoạt tài khoản: ";
-        String url = "http://localhost:3000/kich-hoat/"+email+"/"+activeNumber;
+        String url = "http://localhost:3000/active/"+email+"/"+activeNumber;
         text+=("<br/> <a href="+url+">"+url+"</a> ");
 
         emailService.sendMessage("tuancho1003hn@gmail.com", email, subject, text);
