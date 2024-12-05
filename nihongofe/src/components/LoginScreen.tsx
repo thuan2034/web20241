@@ -274,19 +274,8 @@ export const LoginScreen = ({
           >
             {loginScreenState === "LOGIN" ? "Đăng nhập" : "Tạo tài khoản"}
           </button>
-          <div className="flex items-center gap-2">
-            <div className="h-[2px] grow bg-gray-300"></div>
-            <span className="font-bold uppercase text-gray-400">or</span>
-            <div className="h-[2px] grow bg-gray-300"></div>
-          </div>
-          <div className="flex gap-5">
-            <button
-              className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-b-4 border-gray-200 py-3 font-bold text-blue-600 transition hover:bg-gray-50 hover:brightness-90"
-              onClick={logInAndSetUserProperties}
-            >
-              <GoogleLogoSvg className="h-5 w-5" /> Google
-            </button>
-          </div>
+          <div className="flex items-center gap-2"></div>
+
           <p className="text-center text-xs leading-5 text-gray-400">
             Bằng cách đăng nhập vào Duolingo, bạn đồng ý với{" "}
             <Link
