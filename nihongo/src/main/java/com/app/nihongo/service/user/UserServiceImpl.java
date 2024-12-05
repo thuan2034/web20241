@@ -149,14 +149,14 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.notFound().build();
         }
         User user = existingUserOptional.get();
-        if (userUpdateDTO.getName() != null) {
+        if (!userUpdateDTO.getName().equals("")) {
             user.setFirstName(userUpdateDTO.getName());
 
         }
         if (userUpdateDTO.getPhoneNumber() != null) {
             user.setPhoneNumber(userUpdateDTO.getPhoneNumber());
         }
-        if (userUpdateDTO.getPassword() != null) {
+        if (!userUpdateDTO.getPassword().equals("")) {
             String encryptedPassword = passwordEncoder.encode(userUpdateDTO.getPassword());
             user.setPassword(encryptedPassword);
         }

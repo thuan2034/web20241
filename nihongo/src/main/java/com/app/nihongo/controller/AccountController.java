@@ -1,6 +1,7 @@
 package com.app.nihongo.controller;
 
 
+import com.app.nihongo.dao.UserRepository;
 import com.app.nihongo.entity.User;
 import com.app.nihongo.security.JwtResponse;
 import com.app.nihongo.security.LoginRequest;
@@ -28,6 +29,8 @@ public class AccountController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private JwtService jwtService;
@@ -46,6 +49,11 @@ public class AccountController {
     }
     @PostMapping("/login")
     public ResponseEntity<?> dangNhap(@RequestBody LoginRequest loginRequest){
+
+        User user = userRepository.findByUsername(loginRequest.getUsername());
+        if(!user.isActived()){
+            return ResponseEntity.badRequest().body("Tài khoản chưa được kích hoạt.");
+        }
         // Xác thực người dùng bằng tên đăng nhập và mật khẩu
         try {
 
@@ -62,7 +70,7 @@ public class AccountController {
             // Xác thực không thành công, trả về lỗi hoặc thông báo
             return ResponseEntity.badRequest().body("Tên đăng nhập hặc mật khẩu không chính xác.");
         }
-        System.out.println(3);
+
         return ResponseEntity.badRequest().body("Xác thực không thành công.");
     }
 }

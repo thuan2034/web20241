@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
             "LEFT JOIN Unit f ON c.unit.unitId = f.unitId " +
             "LEFT JOIN MultipleChoiceQuestion d ON c.lessonId = d.lesson.lessonId " +
             "LEFT JOIN UserMultipleChoiceQuestion e ON d.mcqId = e.multipleChoiceQuestion.mcqId AND a.userId = e.user.userId " +
-            "WHERE a.userId = :userId AND b.status = 'current' AND e.isCompleted = true")
+            "WHERE a.userId = :userId AND b.status = 'completed' AND e.isCompleted = true")
     Integer calculateExperience(@Param("userId") Integer userId);
 
     @Query("""
@@ -40,7 +40,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     LEFT JOIN Unit f ON c.unit.unitId = f.unitId
     LEFT JOIN MultipleChoiceQuestion d ON c.lessonId = d.lesson.lessonId
     LEFT JOIN UserMultipleChoiceQuestion e ON d.mcqId = e.multipleChoiceQuestion.mcqId AND a.userId = e.user.userId
-    WHERE f.level = :level AND b.status = 'current'
+    WHERE f.level = :level AND b.status = 'completed'
     GROUP BY a.userId
 """)
     List<UserExpDTO> findUserExpByLevel(@Param("level") String level);
