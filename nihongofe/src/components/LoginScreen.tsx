@@ -4,9 +4,10 @@ import type { ComponentProps } from "react";
 import React, { useEffect, useRef, useState } from "react";
 import { useBoundStore } from "src/hooks/useBoundStore";
 import { useRouter } from "next/router";
-import { signin, signup } from "~/db/queries";
+import { checkNewUser, signin, signup } from "~/db/queries";
 import Fetching from "./Fetching";
 import { useToast } from "~/context/toast";
+import { getIdUserByToken } from "~/utils/JWTService";
 
 export const GoogleLogoSvg = (props: ComponentProps<"svg">) => {
   return (
@@ -101,7 +102,8 @@ export const LoginScreen = ({
       try {
         setLoading(true);
         await signup(form);
-        void router.push("/register");
+        addToast("Đăng ký thành công", "success");
+        void router.push("/");
       } catch (error) {
         addToast(String(error), "error");
       } finally {
@@ -116,17 +118,22 @@ export const LoginScreen = ({
     } else {
       try {
         setLoading(true);
-        await signin({
+        const user = await signin({
           username: form.email,
           password: form.password,
         });
+        const userId = getIdUserByToken();
         setForm({
           username: "",
           age: "",
           email: "",
           password: "",
         });
-        void router.push("/learn");
+        if (userId != null && !(await checkNewUser(userId))) {
+          void router.push("/register");
+        } else {
+          void router.push("/learn");
+        }
       } catch (error) {
         console.log(error);
         addToast(String(error), "error");
@@ -274,19 +281,8 @@ export const LoginScreen = ({
           >
             {loginScreenState === "LOGIN" ? "Đăng nhập" : "Tạo tài khoản"}
           </button>
-          <div className="flex items-center gap-2">
-            <div className="h-[2px] grow bg-gray-300"></div>
-            <span className="font-bold uppercase text-gray-400">or</span>
-            <div className="h-[2px] grow bg-gray-300"></div>
-          </div>
-          <div className="flex gap-5">
-            <button
-              className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-b-4 border-gray-200 py-3 font-bold text-blue-600 transition hover:bg-gray-50 hover:brightness-90"
-              onClick={logInAndSetUserProperties}
-            >
-              <GoogleLogoSvg className="h-5 w-5" /> Google
-            </button>
-          </div>
+          <div className="flex items-center gap-2"></div>
+
           <p className="text-center text-xs leading-5 text-gray-400">
             Bằng cách đăng nhập vào Duolingo, bạn đồng ý với{" "}
             <Link

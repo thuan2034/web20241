@@ -449,7 +449,6 @@ export const DuoPlushieSvg = (props: ComponentProps<"svg">) => {
   );
 };
 
-
 export const DuolingoHeader = (props: ComponentProps<"svg">) => {
   return (
     <svg
@@ -478,12 +477,11 @@ export const DuolingoHeader = (props: ComponentProps<"svg">) => {
         fontSize="18"
         fill="#58CC02"
       >
-        Duolingo
+        Nihongo
       </text>
     </svg>
   );
 };
-
 
 export const GlobeSvg = (props: ComponentProps<"svg">) => {
   return (
@@ -2928,7 +2926,6 @@ export const FireSvg = () => {
     </svg>
   );
 };
-
 
 export const GemSvg = () => {
   return (

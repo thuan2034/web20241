@@ -1,9 +1,24 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import { LanguageHeader } from "src/components/LanguageHeader";
+import { setUserLevel } from "~/db/queries";
 import jlpt from "~/utils/jlpt";
+import { useRouter } from "next/router";
+import { getIdUserByToken } from "~/utils/JWTService";
 
 const Register: NextPage = () => {
+  const router = useRouter();
+  const setLevel = (level: string) => {
+    const userId = getIdUserByToken();
+    if (userId) {
+      setUserLevel(userId, level).then((result) => {
+        if (result === "Update successful") {
+          void router.push("/learn");
+        }
+      });
+    }
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center bg-white text-black">
       <LanguageHeader />
@@ -17,7 +32,12 @@ const Register: NextPage = () => {
           {jlpt.map((jlpts) => (
             <Link
               key={jlpts.name}
-              href="/?login"
+              onClick={(e) => {
+                e.preventDefault(); // Prevent default link behavior if needed
+                setLevel(jlpts.name);
+                // Add any additional logic here
+              }}
+              href="/learn"
               className="flex cursor-pointer flex-col items-center gap-4 rounded-2xl border-2 border-gray-400 px-5 py-8 text-xl font-bold text-green-600 hover:bg-gray-300 hover:bg-opacity-20"
             >
               <span>{jlpts.name}</span>

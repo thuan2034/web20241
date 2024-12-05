@@ -48,8 +48,11 @@ export const RightBar = () => {
             role="button"
             tabIndex={0}
           >
-            <Flag language={language} width={45} />
-            <div>{language.name}</div>
+            <img
+              src="https://d35aaqx5ub95lt.cloudfront.net/vendor/edea4fa18ff3e7d8c0282de3f102aaed.svg"
+              width={45}
+            />
+            <div>Tiếng Nhật</div>
             <div
               className="absolute top-full z-10 rounded-2xl border-2 border-gray-300 bg-white"
               style={{
@@ -62,18 +65,12 @@ export const RightBar = () => {
                 Khóa học của tôi
               </h2>
               <button className="flex w-full items-center gap-3 border-t-2 border-gray-300 bg-blue-100 px-5 py-3 text-left font-bold">
-                <Flag language={language} width={45} />
-                <span className="text-blue-500">{language.name}</span>
+                <img
+                  src="https://d35aaqx5ub95lt.cloudfront.net/vendor/edea4fa18ff3e7d8c0282de3f102aaed.svg"
+                  width={45}
+                />
+                <span className="text-blue-500">Tiếng Nhật</span>
               </button>
-              <Link
-                className="flex w-full items-center gap-3 rounded-b-2xl border-t-2 border-gray-300 px-5 py-3 text-left font-bold hover:bg-gray-100"
-                href="/register"
-              >
-                <span className="flex items-center justify-center rounded-lg border-2 border-gray-400 px-2 text-lg font-bold text-gray-400">
-                  +
-                </span>
-                <span className="text-gray-600">Thêm khóa học</span>
-              </Link>
             </div>
           </div>
           <span

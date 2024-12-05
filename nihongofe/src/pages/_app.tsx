@@ -27,7 +27,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
       <Head>
-        <title>Duolingo Nihongo</title>
+        <title>Nihongo</title>
         <meta name="description" content="Duolingo nhom 17" />
         <link rel="icon" href="/favicon.ico" />
         <meta name="theme-color" content="#0A0" />

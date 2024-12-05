@@ -19,12 +19,12 @@ const Account: NextPage<{
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState<{
     name: string;
-    phone: string;
+    phoneNumber: string;
     password: string;
     confirmPassword: string;
   }>({
     name: profile.name,
-    phone: profile.phone,
+    phoneNumber: profile.phone,
     password: "",
     confirmPassword: "",
   });
@@ -70,7 +70,7 @@ const Account: NextPage<{
             onClick={() => {
               handleSave();
             }}
-            disabled={form.name === "" || form.phone === ""}
+            disabled={form.name === "" || form.phoneNumber === ""}
           >
             Lưu
           </button>
@@ -94,11 +94,11 @@ const Account: NextPage<{
               <div className="font-bold sm:w-2/6">Phone</div>
               <input
                 className="grow rounded-2xl border-2 border-gray-200 p-4 py-2"
-                value={form.phone}
+                value={form.phoneNumber}
                 onChange={(e) =>
                   setForm({
                     ...form,
-                    phone: e.target.value,
+                    phoneNumber: e.target.value,
                   })
                 }
               />
