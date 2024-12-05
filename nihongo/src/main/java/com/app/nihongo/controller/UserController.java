@@ -4,6 +4,7 @@ import com.app.nihongo.dao.UserRepository;
 import com.app.nihongo.dto.UserExpDTO;
 import com.app.nihongo.dto.UserInfoDTO;
 import com.app.nihongo.dto.UserProgressDTO;
+import com.app.nihongo.dto.UserUpdateDTO;
 import com.app.nihongo.service.user.UserService;
 import com.app.nihongo.service.userprogress.UserProgressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,9 @@ public class UserController {
     @GetMapping("/info/{userId}")
     public ResponseEntity<UserInfoDTO> getUserInfo(@PathVariable Integer userId) {
         return userService.getUserInfoById(userId);
+    }
+    @PutMapping("/update-info")
+    public ResponseEntity<?> updateUserInfo(@RequestBody UserUpdateDTO userUpdateDTO) {
+        return userService.updateUserInfo(userUpdateDTO);
     }
 }

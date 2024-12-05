@@ -1,10 +1,10 @@
 package com.app.nihongo.service.user;
 
-
 import com.app.nihongo.dao.UserRepository;
 import com.app.nihongo.dto.UserExpDTO;
 import com.app.nihongo.dto.UserDTO;
 import com.app.nihongo.dto.UserInfoDTO;
+import com.app.nihongo.dto.UserUpdateDTO;
 import com.app.nihongo.entity.User;
 import com.app.nihongo.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,7 +49,8 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new UsernameNotFoundException("Tài khoản không tồn tại!");
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), AuthorityUtils.NO_AUTHORITIES);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                AuthorityUtils.NO_AUTHORITIES);
 
     }
 
@@ -57,7 +59,6 @@ public class UserServiceImpl implements UserService {
         try {
 
             User user = userRepository.findByUserId(id);
-
 
             userRepository.deleteById(id);
 
@@ -90,7 +91,6 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.notFound().build();
         }
     }
-
 
     @Override
     public ResponseEntity<?> updateUser(int id, UserDTO userDTO) {
@@ -138,4 +138,32 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @Override
+    public ResponseEntity<?> updateUserInfo(UserUpdateDTO userUpdateDTO) {
+
+        Optional<User> existingUserOptional = userRepository.findById(userUpdateDTO.getUserId());
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (!existingUserOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        User user = existingUserOptional.get();
+        if (userUpdateDTO.getName() != null) {
+            user.setFirstName(userUpdateDTO.getName());
+
+        }
+        if (userUpdateDTO.getPhoneNumber() != null) {
+            user.setPhoneNumber(userUpdateDTO.getPhoneNumber());
+        }
+        if (userUpdateDTO.getPassword() != null) {
+            String encryptedPassword = passwordEncoder.encode(userUpdateDTO.getPassword());
+            user.setPassword(encryptedPassword);
+        }
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok("User infor updated successfully");
+    }
+
 }
