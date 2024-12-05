@@ -1,12 +1,14 @@
 package com.app.nihongo.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @Entity
+@AllArgsConstructor
 @Table(name = "user_lesson_status")
 public class UserLessonStatus {
 

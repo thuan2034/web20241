@@ -13,4 +13,5 @@ public interface LessonService {
 
     ResponseEntity<?> updateLessonStatus(Integer userId, Integer lessonId, String status);
 
+    ResponseEntity<?> setLevelUser(Integer userId, String level);
 }

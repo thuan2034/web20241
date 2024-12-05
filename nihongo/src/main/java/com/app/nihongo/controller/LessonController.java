@@ -33,4 +33,11 @@ public class LessonController {
     public ResponseEntity<LessonDTO> getLessonById(@PathVariable Integer lessonId) {
         return lessonService.getLessonById(lessonId);
     }
+
+    @PostMapping("/set-level")
+    public ResponseEntity<?> setLevelUser(
+            @RequestParam Integer userId,
+            @RequestParam String level) {
+        return lessonService.setLevelUser(userId, level);
+    }
 }
