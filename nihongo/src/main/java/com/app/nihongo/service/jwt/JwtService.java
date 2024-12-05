@@ -40,7 +40,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+30*60*1000000)) // JWT hết hạn sau 30000 phút
+                .setExpiration(new Date(System.currentTimeMillis()+30*60*100000)) // JWT hết hạn sau 3000 phút
                 .signWith(SignatureAlgorithm.HS256,getSigneKey())
                 .compact();
     }

@@ -38,7 +38,7 @@ public class UserController {
     public ResponseEntity<UserInfoDTO> getUserInfo(@PathVariable Integer userId) {
         return userService.getUserInfoById(userId);
     }
-    @PreAuthorize("#userUpdateDTO.userId == authentication.principal.id")
+
     @PutMapping("/update-info")
     public ResponseEntity<?> updateUserInfo(@RequestBody UserUpdateDTO userUpdateDTO) {
         return userService.updateUserInfo(userUpdateDTO);

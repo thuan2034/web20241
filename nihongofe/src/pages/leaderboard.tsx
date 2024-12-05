@@ -64,7 +64,7 @@ const LeaderboardProfile = ({
 };
 
 const Leaderboard: NextPage = () => {
-  const [selectedTab, setSelectedTab] = useState("N1");
+  const [selectedTab, setSelectedTab] = useState("N5");
   const [experiences, setExperiences] = useState([]);
 
   const leaderboardLeague = "Bảng xếp hạng";
