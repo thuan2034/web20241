@@ -21,7 +21,7 @@ const LearnPage: NextPage = ({ userProgress, units }) => {
 
         <div className="flex flex-1 items-start justify-center px-6 md:ml-32 lg:ml-64">
           <FeedWrapper>
-            <Header title="Japanese" />
+            <Header title="Tiếng Nhật" />
             {units
               .sort(
                 (unitFirst, unitLast) =>

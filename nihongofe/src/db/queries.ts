@@ -10,18 +10,18 @@ export const getPractices = () => {
 export const updateProfile = async ({
   userId,
   name,
-  phone,
+  phoneNumber,
   password,
 }: {
   userId: number;
   name: string;
-  phone: string;
+  phoneNumber: string;
   password: string;
 }) => {
   return await axios.put(`${API_BASE_URL}/api/user/update-info`, {
     userId,
     name,
-    phone,
+    phoneNumber,
     password,
   });
 };
